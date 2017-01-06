@@ -1,0 +1,40 @@
+section.account{
+	min-width: 200px;
+	min-height:180px;
+	position:relative;
+}
+
+section.account .body{
+	padding-top: 10px;
+	padding-bottom:40px;
+}
+
+section.account .amount{
+	padding: 10px 0;
+	text-align:center;
+	font-size: 1.2em;
+	margin:0 auto;
+}
+
+section.account .comments{
+	font-size: 0.8em;
+	color:#9299a2;
+}
+
+section.account .nav{
+	position:absolute;
+	bottom:0;
+	height:30px;
+	padding:5px 0;
+	right:5px;
+}
+
+.account_add{
+	float:right;
+	clear:both;
+	margin:0;
+}
+
+.account_add .body{
+	padding: 10px 30px;
+}

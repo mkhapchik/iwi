@@ -1,0 +1,111 @@
+.main {
+	color:#333;
+}
+
+.main h1{
+	font-size: 1.4em;
+}
+
+.main h2{
+	font-size: 1.3em;
+}
+
+.main h3{
+	font-size: 1.2em;
+}
+
+.main h4{
+	font-size: 1.1em;
+}
+
+.main h5{
+	font-size: 1em;
+}
+
+.main h6{
+	font-size: 1em;
+}
+
+.main div{
+
+}
+
+.main p{
+
+}
+
+.main a{
+
+}
+
+.main a:not(.button){
+	color:#009ecf;
+}
+
+.main a:link{
+
+}
+
+.main a:hover{
+
+}
+
+.main a:visited{
+
+}
+
+.main a:active{
+
+}
+
+.main table{
+
+}
+
+.main table caption{
+
+}
+
+.main table th{
+
+}
+
+.main table td{
+
+}
+
+.main ul{
+	padding-left:20px;
+}
+
+.main ul li{
+
+}
+
+.main ol{
+	padding-left:20px;
+}
+
+.main ol li{
+
+}
+
+.main dl{
+
+}
+
+.main dt{
+
+}
+
+.main dd{
+
+}
+
+.main img{
+
+}
+
+.main hr{
+
+}
