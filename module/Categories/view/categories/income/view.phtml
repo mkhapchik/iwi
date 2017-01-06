@@ -1,0 +1,43 @@
+<style>
+	.color{
+		width:50px;
+		height:30px;
+	}
+</style>
+
+<section class="block">
+	<header class="head"><h1>Диаграмма доходов</h1></header>
+	<div class="body">
+		$category['statistic']
+		по категориям
+	</div>
+</section>
+
+<section class="block">
+	<header class="head"><h1>Категории дохода</h1><a class="button" href="/categories/income/add"><span class="ui-icon ui-icon-plusthick"></span></a></header>
+	<div class="body">
+		<table>
+		<tr>
+			<th></th>
+			<th>Категория</th>
+			<th>Приход за месяц</th>
+			<th></th>
+		</tr>
+		<?php foreach($categories as $category): 
+	
+		?>
+		<tr>
+			<td><?=$category['name'] ?></td>
+			<td><?=$category['sum']?$category['sum']:'0.00' ?> <span class="rub">Р</span></td>
+			<td>
+			<div class="nav">
+				<a class="button edit" href="/categories/income/editex/<?=$category['id']?>"><span class="ui-icon ui-icon-pencil">редактировать</span></a> 
+				<a class="button del" href="/categories/income/delex/<?=$category['id']?>"><span class="ui-icon ui-icon-trash">удалить</span></a>
+			</div>
+			</td>
+		</tr>
+
+		<?php endforeach;?>
+		</table>
+	</div>
+</section>

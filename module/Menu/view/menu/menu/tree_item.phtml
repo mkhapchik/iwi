@@ -1,0 +1,17 @@
+<li class="<?=$item->is_active ? 'active' : 'inactive' ?>">
+    <?php 
+        echo $this->formElement($collection->get($item->id)->get('id')); 
+        echo $this->formElement($collection->get($item->id)->get('parent_item_id')); 
+        echo $this->formElement($collection->get($item->id)->get('ord'));
+       // echo $this->formElement($collection->get($item->id)->get('is_active'));  
+    ?>
+    <span class="glyphicon glyphicon-move"></span>
+    <a 
+		href="<?=$this->url("menu", array('action'=>'editItem', 'id'=>$item->parent_menu_id, 'itemId'=>$item->id));?>" 
+		class="hover_show_icon"
+	>
+		<?php echo $item->label;?>
+		<span class="glyphicon glyphicon-pencil"></span>
+	</a>
+    <?php echo $this->partial('menu/menu/tree.phtml', array('tree'=>$item->getChildren(), 'collection'=>$collection)); ?>
+</li>

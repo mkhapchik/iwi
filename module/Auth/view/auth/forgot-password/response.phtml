@@ -1,0 +1,8 @@
+<h1 class="page-header">Сообщение отправлено</h1>
+<h3 class="text-success margin-bottom-20">Мы отправили вам ссылку для изменения пароля.</h3>
+<p class="margin-bottom-20">
+Мы отправили вам сообщение по электронной почте, с помощью которого вы можете легко изменить пароль.
+</p>
+<?php if($email_link): ?>
+	<a class="btn btn-primary" target="_blanck" href="<?=$email_link?>">Проверить электронную почту</a>
+<?php endif;?>

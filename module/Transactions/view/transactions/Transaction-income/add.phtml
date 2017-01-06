@@ -1,0 +1,10 @@
+<?php
+	echo $this->partial('transactions/Transaction/add_form.phtml', 
+		array(
+			'form' => $this->form, 
+			'message'=>$this->message,
+			'header'=>'Добавление дохода',
+			'is_success'=>$this->is_success
+		)
+	); 
+?>

@@ -1,0 +1,29 @@
+<section class="block b-form">
+<header class="head">
+<h1>Добавление нового счета</h1>
+</header>
+<div class="body">
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', '/accounts/add');
+$form->prepare();
+echo $this->form()->openTag($form);
+echo $this->formHidden($form->get('id'));
+?>
+<div class="form_element">
+	<?=$this->formRow($form->get('name'))?>
+</div>
+<div class="form_element">
+	<?=$this->formRow($form->get('amount'))?>
+</div>
+<div class="form_element">
+	<?=$this->formRow($form->get('comments'))?>
+</div>
+<div class="form_element button">
+	<?=$this->formRow($form->get('submit'))?>
+</div>
+<?php echo $this->form()->closeTag(); ?>
+<div class="clear"></div>
+</div>
+</section>

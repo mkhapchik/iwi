@@ -1,0 +1,198 @@
+<div id="placeholder" style="width:100%;height:300px">
+
+</div>
+
+<div id="overview" style="width:100%;height:100px">
+
+</div>
+
+
+<script>
+
+var plot;
+var overview;
+
+var plot_options = {
+	xaxis: {
+		mode: "time",
+		timezone: "browser",
+		//timezone: "Europe/Moscow",
+		tickLength: 5
+	},
+	selection: {
+		mode: "x",
+		
+	},
+	grid: {
+		//markings: weekendAreas
+		hoverable: true,
+		//clickable: true
+	},
+	colors: ['#2e83ff'],
+	lines: { show: true, steps: true, fill:true},
+	points: {
+					show: false
+				}
+};
+
+var overview_options = {
+	series: {
+		lines: {
+			show: true,
+			lineWidth: 1
+		},
+		shadowSize: 0
+	},
+	xaxis: {
+		ticks: [],
+		mode: "time"
+	},
+	yaxis: {
+		ticks: [],
+		min: 0,
+		//autoscaleMargin: 0.1
+	},
+	selection: {
+		mode: "x"
+	},
+	lines: { show: true, steps: true },
+	colors: ['#2e83ff'],
+};
+
+
+function Draw(from, to)
+{
+	var dataPost = {};
+	if(from) dataPost.from = from;
+	if(to) dataPost.to = to;
+	dataPost.width = $("#placeholder").width();
+	
+	var f = function(json){
+		d = json.data;
+		plot = $.plot("#placeholder", [d], plot_options);
+		overview = $.plot("#overview", [d], overview_options);
+	}
+	
+	request(dataPost, f);
+}
+
+function drawPlaceholder(from, to)
+{
+	var dataPost = {};
+	if(from) dataPost.from = from;
+	if(to) dataPost.to = to;
+	dataPost.width = $("#placeholder").width();
+	
+	var f = function(json){
+		d = json.data;
+		plot = $.plot("#placeholder", [d], plot_options);
+	}
+	
+	request(dataPost, f);
+	
+}
+
+function drawOverview(from, to)
+{
+	var dataPost = {};
+	if(from) dataPost.from = from;
+	if(to) dataPost.to = to;
+	dataPost.width = $("#overview").width();
+	
+	var f = function(json){
+		d = json.data;
+		//for (var i = 0; i < d .length; ++i) d[i][0] += 60 * 60 * 1000;
+		
+		overview = $.plot("#overview", [d], overview_options);
+	}
+	
+	request(dataPost, f);
+}	
+
+function request(data, f)
+{
+	$("#placeholder").loader('start');
+	$.ajax({
+		url: "/users/profile/history",
+		method: 'post',
+		data:data,
+		dataType:'json',
+		success: function(res){
+			if(res.is_success)
+			{
+				f(res);
+			}
+			else if(typeof(res.message)!='undefined')
+			{
+				$('<div/>', {html:res.message}).modalDialog().modalDialog('show');
+			}
+			else
+			{
+				$('<div/>', {html:res}).modalDialog().modalDialog('show');
+			}
+		},
+		error: function (jqXHR, exception) {
+			var msg = '';
+			if (jqXHR.status === 0) return;//msg = 'Not connect.\n Verify Network.';
+			else if (jqXHR.status == 404) msg = 'Requested page not found. [404]';
+			else if (jqXHR.status == 500) msg = 'Internal Server Error [500].';
+			else if (exception === 'parsererror') msg = 'Requested JSON parse failed:<br>' + jqXHR.responseText;
+			else if (exception === 'timeout') msg = 'Time out error.';
+			else if (exception === 'abort') msg = 'Ajax request aborted.';
+			else msg = 'Uncaught Error.\n' + jqXHR.responseText;    
+			
+			$('<div/>', {html:msg}).modalDialog().modalDialog('show');
+    },
+		
+	}).always(function(){
+		$("#placeholder").loader('stop');
+	});	
+}
+
+$(document).ready(function(){
+	
+	$("#placeholder").loader();
+	
+	
+	$("<div id='tooltip'></div>").css({
+		position: "absolute",
+		display: "none",
+		border: "1px solid #fdd",
+		padding: "2px",
+		"background-color": "#fee",
+		opacity: 0.80
+	}).appendTo("body");
+		
+	$("#placeholder").bind("plotselected", function (event, ranges) {
+		drawPlaceholder(ranges.xaxis.from, ranges.xaxis.to);
+		overview.setSelection(ranges, true);
+	});
+	
+	$("#placeholder").bind("plothover", function (event, pos, item) {
+		if (item) {
+			var tip;
+			if(item.series.data[item.dataIndex][1]>0)
+			{
+				tip= item.series.data[item.dataIndex][2] + ': ' + (item.series.data[item.dataIndex][3]==1 ? 'Не авторизован' : 'Авторизован');
+			}
+			else
+			{
+				tip = "Нет активности";
+			}
+			
+				
+			$("#tooltip").html(tip).css({top: item.pageY+5, left: item.pageX+5}).fadeIn(200);
+		} else {
+			$("#tooltip").hide();
+		}
+	});
+		
+
+	$("#overview").bind("plotselected", function (event, ranges) {
+		plot.setSelection(ranges);
+	});
+	
+	Draw();
+});
+
+</script>

@@ -1,0 +1,91 @@
+<div class="col-lg-6">
+	<?php echo $this->formGroup()
+		->setLabelAttributes(array('class'=>'control-label col-sm-5 col-md-3 col-lg-5'))
+		->setInputGroupAttributes(array('class'=>'col-sm-7 col-md-6 col-lg-7'))
+		->render($group);?>
+</div>
+
+<div class="clearfix"></div>
+
+<fieldset id="permissions" class="col-lg-12">
+	<fieldset disabled>
+        <span id="permissions-template" style="display:none">
+            <?=$this->partial('pages/page/permission.phtml', array('collection'=>$permissions->getTemplateElement()));?>
+        </span>
+    </fieldset>
+	<?php foreach($permissions as $col):?>
+	<?=$this->partial('pages/page/permission.phtml', array('collection'=>$col));?>
+	<?php endforeach; ?>
+</fieldset>
+
+<script>
+	$(document).ready(function(){
+		$('#permissions').dynamicElement({
+			template_block : $($('#permissions-template').html()),
+			template_placeholder: "__index__",
+			target_block : $('#permissions').find(" > .form-inline"),
+			selection:{
+				select_control: $('#NonRulesRoles'),
+				map:{
+					v: '.roleId',
+					opt: '.role'
+				}
+			},
+			buttons: {},
+		});
+		
+		$('body').on('click', '#permissions .permission_del', function(){
+            var p = $(this).closest('.permission');
+            p.hide(400, function(){
+				var i = p.attr('data-index');
+				$('#permissions').dynamicElement('del', [i]);
+			});
+            
+			return false;
+		});
+
+	});
+</script>
+
+<style>
+	#permissions{
+		display:block;
+		float:none;
+		clear:both;
+	}
+	
+	#permissions span[data-template]{
+		display:none;
+	}
+	
+	#permissions fieldset{
+		display:block;
+		float:left;
+		clear:both;
+		margin: 5px 0;
+	}
+	
+	#permissions fieldset > *{
+		float:left;
+		margin-left:20px;
+	}
+	
+	#permissions fieldset input[type=checkbox]{
+		width:auto;
+		min-width:auto;
+		height:auto;
+		margin-top: 10px;
+	}
+	
+	#permissions fieldset .role{
+		border:none;
+		cursor:default;
+		width:auto;
+	}
+	
+	#permissions fieldset .del{
+		width: 20px;
+		height:20px;
+		margin-top:7px;
+	}
+</style>

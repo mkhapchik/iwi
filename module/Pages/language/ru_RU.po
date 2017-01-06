@@ -1,0 +1,32 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pages\n"
+"POT-Creation-Date: 2015-11-03 12:47+0300\n"
+"PO-Revision-Date: 2015-11-03 12:47+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.6\n"
+"X-Poedit-Basepath: ../view/pages/page\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-KeywordsList: translate\n"
+"X-Poedit-SearchPath-0: list.phtml\n"
+
+#: list.phtml:14
+msgid "Manage pages"
+msgstr "Управление страницами"
+
+#: list.phtml:19
+msgid "Add page"
+msgstr "Добавить страницу"
+
+#: list.phtml:27
+msgid "page name"
+msgstr "Название страницы"
+
+#: list.phtml:28
+msgid "page control"
+msgstr "Управление"

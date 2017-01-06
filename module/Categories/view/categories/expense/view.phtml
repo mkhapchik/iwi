@@ -1,0 +1,62 @@
+<style>
+	.block .body table tr.overflow{
+		background: #ffc9c9;
+	}
+
+	.color{
+		width:50px;
+		height:30px;
+	}
+</style>
+
+<section class="block">
+	<header class="head"><h1>Диаграмма расходов</h1></header>
+	<div class="body">
+		$category['statistic']
+		по категориям
+	</div>
+</section>
+
+<section class="block">
+	<header class="head"><h1>Категории расхода</h1> <a class="button" title="Добавить новую категорию расхода" href="/categories/expense/add"><span class="ui-icon ui-icon-plusthick"></span></a></header>
+	<div class="body">
+		<table>
+		<tr>
+			<th></th>
+			<th>Категория</th>
+			<th>Лимит</th>
+			<th>Расход за месяц</th>
+			<th>Остаток</th>
+			<th></th>
+		</tr>
+		<?php foreach($categories as $category): 
+		$class = $category['overflow'] > 0? 'overflow': 'balance';
+		?>
+		<tr class="<?=$class?>">
+			<td><div class="color" style="background-color:<?=$category['color'] ? $category['color'] : 'transparent' ?>"></td>
+			<td><?=$category['name'] ?></td>
+			
+			<td><?=$category['amount_limit'] ? $category['amount_limit'] : '0.00' ?> <span class="rub">Р</span></td>
+			<td><?=$category['sum'] ? $category['sum'] : '0.00' ?> <span class="rub">Р</span></td>
+			<td><?= $category['overflow']? -$category['overflow']  :'0.00' ?> <span class="rub">Р</span></td>
+			<td>
+			<div class="nav">
+				<a class="button" href="/categories/expense/editex/<?=$category['id']?>"><span class="ui-icon ui-icon-pencil">редактировать</span></a> 
+				<a class="button del" href="/categories/expense/delex/<?=$category['id']?>"><span class="ui-icon ui-icon-trash">удалить</span></a>
+			</div>
+			</td>
+		</tr>
+
+		<?php endforeach;?>
+		</table>
+	</div>
+</section>
+
+<script>
+	$( document ).tooltip({
+		items: "tr.overflow",
+		content: function() {
+			return 'Превышен лимит!';
+		}
+	});
+</script>

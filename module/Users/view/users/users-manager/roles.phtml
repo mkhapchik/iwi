@@ -1,0 +1,196 @@
+<?php $idRolesBlock='roles_'.uniqid(); ?>
+
+<div id="<?=$idRolesBlock?>">
+    <div class="col-lg-12">
+        <div class="form-group">
+            <label class="control-label col-sm-5 col-md-5 col-lg-4" for=""><?=$select_roles->getLabel()?>:</label>
+            <div class="input-group col-sm-6 col-md-6 col-lg-6">
+                <?php
+                    $class = $select_roles->getAttribute('class');
+                    $select_roles->setAttribute('class', $class.' form-control');
+                    echo $this->formElement($select_roles);
+                ?>
+                <span class="input-group-btn">
+                    <?php $url_add = $this->url('roles-manager', array('action'=>'add-role')); ?>
+                    <button class="btn btn-default addRoles" type="button" data-toggle="tooltip" data-placement="top" title="Добавить новую роль"><span class="glyphicon glyphicon-plus-sign"></span></button>
+                </span>
+            </div><!-- /input-group -->
+        </div>
+    </div>
+
+    <div class="clearfix visible-lg-block"></div>
+
+
+    <fieldset class="roles" class="col-lg-12">
+        <span class="template" style="display:none">
+            <?=$this->partial('users/users-manager/role.phtml', array('collection'=>$roles->getTemplateElement()));?>
+        </span>
+        <?php foreach($roles as $col):?>
+        <?=$this->partial('users/users-manager/role.phtml', array('collection'=>$col));?>
+        <?php endforeach; ?>
+    </fieldset>
+
+
+    <div style="display:none">
+        <div id="access_denied_dialog">
+            <div class="modal-dialog">            
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Ошибка</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <p id="access_denied_message" class="text-danger"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+	function getRoleForm(url, id){
+        url = id ? url+'/'+id : url;
+        url += '?r='+Math.random();
+		var dialog = $('<div/>');
+		dialog.modalDialog({
+			'is_ajax':1,
+			'ajax':{
+				url: url,
+				dataFilter:function(res){
+                    var c;
+                
+                    try
+                    {
+                       var json = JSON.parse(res);
+                       c = $('#access_denied_dialog');
+                       c.find('#access_denied_message').html(json.message);
+                       
+                       return c;
+                    }
+                    catch(e)
+                    {
+                      
+                    }
+                   
+					c = $('<div/>', {html: res});
+                    
+					var form = c.find('form');
+                    form.attr('action', url);
+					form.form({});
+										
+					form.on('form.success', function(event, msg, res){
+						if(!id) 
+						{
+							//dSel.dynamicSelect('add', res.role.id, res.role.label);
+							var new_el = $('.roles').dynamicElement('add');
+							new_el.find('.role_id').val(res.role.id);
+							new_el.find('.role_label').text(res.role.label);
+						}
+						else 
+						{
+							$('.roles').find(".role_id[value='"+res.role.id+"']").closest('.form-group').find('.role_label').text(res.role.label);
+							//dSel.dynamicSelect('edit', res.role.id, res.role.label);
+						}
+							
+						
+						
+						dialog.modalDialog('destroy');
+					});
+                        
+					return c;
+				}
+			}
+		});//.modalDialog('show');
+       
+	}
+    
+    function initRoles(obj)
+    {
+      
+        obj.find('.roles').dynamicElement({
+			template_block : obj.find('.roles > span.template > .form-group'),
+			template_placeholder: "__index__",
+			target_block : obj.find(".roles > .form-group"),
+			selection:{
+				select_control: obj.find("select[name='select_roles']"),
+				map:{v: '.role_id', opt: '.role_label'}
+			},
+			buttons: {},
+		});
+		
+		obj.find('.roles').on('dynamic-element.added', function(event, new_el){
+            new_el.find('[data-toggle="tooltip"]').tooltip();
+		});
+		
+        
+		obj.find('.roles').on('click', '.role_cancel', function(){
+			var form_group = $(this).closest('.form-group');
+            form_group.hide(400, function(){
+				var i = form_group.attr('data-index');
+				obj.find('.roles').dynamicElement('del', [i]);
+			});
+		});
+        
+        obj.find(".addRoles").click(function(){
+			var url = '<?=$this->url('roles-manager', array('action'=>'add-role'));?>';
+			getRoleForm(url);
+			return false;
+        });
+       
+       
+        obj.find('.roles').on('click', 'a.edit-role', function(){
+           var url = '<?=$this->url('roles-manager', array('action'=>'edit-role'));?>';
+		   var id = $(this).closest('.form-group').find('.role_id').val();
+		   
+           getRoleForm(url, id);
+		   return false;
+        });
+    }
+    
+   
+	
+		
+	$(document).ready(function(){
+		
+        initRoles($('#<?=$idRolesBlock?>'));
+        
+        /*
+		$('.roles').dynamicElement({
+			template_block : $('.roles').find('>span.template > .form-group'),
+			template_placeholder: "__index__",
+			target_block : $('.roles').find(" > .form-group"),
+			selection:{
+				select_control: $("select[name='select_roles']"),
+				map:{v: '.role_id', opt: '.role_label'}
+			},
+			buttons: {},
+		});
+		
+		$('.roles').on('dynamic-element.added', function(event, new_el){
+            new_el.find('[data-toggle="tooltip"]').tooltip();
+		});
+		
+        
+		$('.roles').on('click', '.role_cancel', function(){
+			$(this).closest('.form-group').hide(400, function(){
+				$(this).remove();
+			});
+		});
+		*/
+		
+		//dSel = $("#user_form select[name='select_roles']");
+		//dSel.dynamicSelect({});
+		
+		
+		
+       
+
+	});
+</script>

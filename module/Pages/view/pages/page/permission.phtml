@@ -1,0 +1,27 @@
+<div class="form-inline permission">
+	<div class="clearfix"></div>
+	<?php echo $this->formHidden($collection->get('roleId')) ?>
+    <?php echo $this->formHidden($collection->get('roleName')) ?>
+	<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+		<div class="input-group"> 
+			<p class="form-control-static">
+				<span class="role" href="#">
+					<?= $collection->get('roleName')->getValue(); ?>
+				</span>
+			</p>
+		</div>	
+	</div>
+	<div class="form-group col-xs-6 col-sm-7 col-md-7 col-lg-7">
+		<div class="input-group actions"> 
+            <?php echo $this->formElement($collection->get('actions')) ?>
+		</div>
+	</div>
+	<div class="form-group col-xs-2 col-sm-1 col-md-1 col-lg-1">
+		<button title="Удалить привилегию роли" class="btn btn-link permission_del pull-right" data-toggle="tooltip" data-placement="auto top"><span class="glyphicon glyphicon-remove"></span></button>
+	</div>
+    <div>
+        <?php echo $this->formElementErrors($collection->get('actions')); ?>
+        <?php echo $this->formElementErrors($collection->get('roleId')); ?>
+    </div>
+</div>
+

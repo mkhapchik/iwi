@@ -1,0 +1,10 @@
+<?php
+	echo $this->partial('transactions/Transaction/view.phtml', array(
+		'paginator'=>$this->paginator, 
+		'routName'=>$this->routName,
+		'routeParams'=>$this->routeParams,
+		'header'=>'Расходы'
+		
+	));
+?>
+	

@@ -1,0 +1,19 @@
+<?php
+if(count($this->container)>0):?>
+<ul class="nav nav-sidebar">
+<?php foreach ($this->container as $page): ?>
+	
+	<li <?=$page->isActive() ? "class='active'":""?>>
+		<a href="<?=$page->href?>" target="<?=$page->blank ? '_blank' : '_self'?>">
+			<?=$page->label?>
+		</a>
+		
+		<?php
+			if(count($page->getPages())) 
+				echo $this->partial($this->__template, array('container'=>$page->getPages()));
+		?>
+		
+	</li>
+<?php endforeach; ?>
+</ul>
+<?php endif;?>

@@ -1,0 +1,43 @@
+<h1 class="page-header"><?=$title?></h1>
+
+
+<div class="margin-bottom-40">
+	<a class="btn btn-primary btn-md" href="<?=$this->url('roles-manager', array('action' => 'add-role'));?>" title="Добавить новую роль">
+		<span class="glyphicon glyphicon-plus"></span>Добавить новую роль
+	</a>
+</div>
+
+<div class="">
+	<table class="table">
+		<tr>
+			<th>Название</th>
+			<th></th>
+			<th>Описание</th>
+		</tr>
+		<?php foreach($paginator as $role): ?>
+		<tr>
+            <td><?=$role->label?></td>
+            <td>
+                <a href="<?=$this->url('roles-manager', array('action' => 'edit-role', 'id'=>$role->id));?>" title="Редактировать" data-toggle="tooltip">
+					<span class="glyphicon glyphicon-pencil"></span>
+				</a>
+            </td>
+            <td><?=$role->description?></td>
+        </tr>
+		<?php endforeach;?>
+	</table>
+</div>
+<div class="">
+<?php
+	echo $this->paginationControl(
+		$this->paginator,
+		'sliding',
+		'application/pagination/paginator.phtml',
+		array(
+			'route' => $this->routName,
+			'params' => $this->routeParams,
+			'options' => $this->routeOptions
+		)
+	 );
+?>
+</div>

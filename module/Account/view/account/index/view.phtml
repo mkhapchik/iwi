@@ -1,0 +1,25 @@
+<?php //echo $this->translate('test') ?>
+
+<section class="block account_add">
+	<div class="body"><a class="button" href="/accounts/add">Добавить счет</a></div>
+</section>
+<div class="clear"></div>
+<?php if($accounts->count()>0):?>
+
+
+<?php foreach($accounts as $account): ?>
+	<section class="block account">
+		<header class="head"><h1><?=$account->name; ?></h1></header>
+		<div class="body">
+			<div class="amount<?=$account->amount<0? ' error' : ''?>"><?=$account->amount; ?> <span class="rub">Р</span></div>
+			<div class="comments"> <?=$account->comments; ?> </div>
+			<div class="nav">
+				<a class="button" href="/accounts/edit/<?=$account->id?>"><span class="ui-icon ui-icon-pencil">редактировать</span></a> 
+				<a class="button" href="/accounts/del/<?=$account->id?>"><span class="ui-icon ui-icon-trash">удалить</span></a>
+			</div>
+		</div>
+	</section>
+<?php endforeach; ?>
+
+
+<?php endif;?>

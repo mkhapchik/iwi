@@ -1,0 +1,92 @@
+<style>
+	tr.blocked *{
+		color:#9299a2;		
+	}
+	
+	li.super{
+		list-style:none;
+		margin: 0 0 5px -15px;
+		font-weight:bold;
+	}
+</style>
+
+<h1 class="page-header">Управление пользователями</h1>
+
+
+<div class="margin-bottom-40">
+	<a class="btn btn-primary btn-md" href="<?=$this->url('users-manager', array('action' => 'addUser'));?>" title="Добавить нового пользователя">
+		<span class="glyphicon glyphicon-plus"></span>Добавить нового пользователя
+	</a>
+</div>
+
+<div class="">
+	<table class="table">
+		<tr>
+			<th>Логин</th>
+			<th></th>
+			<th>Имя</th>
+			<th class="hidden-xs hidden-sm hidden-md">E-mail</th>
+			<th class="hidden-xs">Статус</th>
+			<th class="hidden-xs">Роли</th>
+			<th></th>
+		</tr>
+		<?php foreach($paginator as $user): ?>
+		<tr class="<?=$user->isBlocked() ? 'inactive' : ''?>">
+			<td>
+				<a href="<?=$this->url('users-manager', array('action' => 'editUser', 'id'=>$user->id));?>" title="Редактировать" data-toggle="tooltip">
+				<?=$user->login?>
+				</a>
+			</td>
+			<td>
+				<a href="<?=$this->url('users-manager', array('action' => 'editUser', 'id'=>$user->id));?>" title="Редактировать" data-toggle="tooltip">
+					<span class="glyphicon glyphicon-pencil"></span>
+				</a>
+                <?php if(!$user->isBlocked() && $user->id!=$userAuthId): ?>
+				<a href="<?=$this->url('users-manager', array('action' => 'loginAsUser', 'id'=>$user->id));?>" title="Войти под именем пользователя" data-toggle="tooltip">
+					<span class="glyphicon glyphicon-user"></span>
+				</a>
+                <?php endif;?>
+			</td>
+			<td><?=$user->name?></td>
+			<td class="hidden-xs hidden-sm hidden-md"><?=$user->email?></td>
+			<td class="hidden-xs">
+				<?php if($user->isBlockedFlag()): ?>
+					Заблокирован
+				<?php elseif($user->isTemporarilyBlocked()): ?>
+					Заблокирован <br>до <?=date('d.m.Y H:i:s', strtotime($user->temporary_block))?>
+				<?php else:?>
+					Активен
+				<?php endif;?>
+			</td>
+			<td class="hidden-xs"> 
+				<?php 
+				$roles = $getRoles($user->id);
+				?>
+				<ul class="list-unstyled">
+					<?php if($user->isSuper()): ?>
+						<li class="super">Супер пользователь</li>
+					<?php endif;?>
+					<?php foreach($roles as $role): ?>
+						<li><?=$role->label?></li>
+					<?php endforeach; ?>
+				</ul>
+			</td>
+			<td></td>
+		</tr>
+		<?php endforeach;?>
+	</table>
+</div>
+<div class="">
+<?php
+	echo $this->paginationControl(
+		$this->paginator,
+		'sliding',
+		'application/pagination/paginator.phtml',
+		array(
+			'route' => $this->routName,
+			'params' => $this->routeParams,
+			'options' => $this->routeOptions
+		)
+	 );
+?>
+</div>

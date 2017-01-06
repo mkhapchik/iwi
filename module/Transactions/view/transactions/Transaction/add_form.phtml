@@ -1,0 +1,134 @@
+<?php
+	$form->setAttribute('action', '');
+	$form->prepare();
+	$collection = $form->get('transaction');
+?>
+<section class="block b-form b-form-inline full_screen" id="transaction_block">
+	<header class="head">
+		<h1><?=$header?></h1>
+	</header>
+	<div class="body">
+		<div id="template" style="display:none">
+			<?php
+				echo $this->partial(
+					'transactions/transaction/group_form.phtml', 
+					array('collection'=>array($collection->getTemplateElement()))
+				);
+			?>
+		</div>
+		
+		<?php if(!empty($message)):?>
+		<div class="message"><span class="<?=$is_success ? 'success' : 'error'?>"><?=$message?></span></div>
+		<?php endif; ?>
+		
+		<?php
+			echo $this->form()->openTag($form);
+			echo $this->partial('transactions/transaction/group_form.phtml', array('collection'=>$collection));
+		?>
+
+		<div class="form_element button">
+			<?=$this->formRow($form->get('submit'))?>
+		</div>
+		<?php echo $this->form()->closeTag(); ?>
+		<div class="clear"></div>
+	</div>
+	<div id="test"></div>
+</section>
+
+<script>
+    function new_transaction(duration) 
+	{
+        duration = duration ? duration : 0;
+		/*
+		var currentCount = $('form > .group:not(.template)').length;
+		
+		var template = $('#transaction_block .template').clone(true, true);
+		
+        template.removeClass('template');
+		
+		var txt = template.html().replace(/__index__/g, currentCount);
+		template.html(txt);
+
+		if(currentCount>0) $('form > .group:last').after(template);
+		else $('form').prepend(template);
+		template.show(duration);
+        return false;
+		*/
+    }
+	
+	function remove_transaction(btn, duration)
+	{
+		duration = duration ? duration : 0;
+		var currentCount = $('form .group').length;
+		if(currentCount>1) btn.parents('.group:eq(0)').hide(duration, function(){$(this).remove()});
+		return false;
+	}
+	
+	function autocompleteCommentInit(input)
+	{
+		var str = input.val();
+		if(str.length<2)
+		{
+			input.autocomplete( "option", "source", []);
+		}
+		else
+		{
+			$.ajax({
+				url: '/transactions/expense/getComments',
+				method: 'post',
+				dataType: 'json',
+				data:{param:str},
+				success: function(source){
+					input.autocomplete( "option", "source", source);
+				}
+			});
+		}
+		
+	}
+	
+	$(document).ready(function(){
+		//new_transaction();
+		var currency_timeId;
+		
+		$('form#transaction_form').dynamicElement({
+			//template_block : "#template",
+			template_placeholder: "__index__",
+			//target_block : ".group",
+			//buttons: []
+			target_block : $('#template').html()
+			
+		});
+		
+		$('body').on('input', ".currency:not('.complite')", function(){
+			var currency = $(this);
+			clearTimeout(currency_timeId);
+			currency_timeId = setTimeout(function(){
+				//new_transaction(500); 
+				$('form#transaction_form').dynamicElement("add");
+				currency.addClass('complite');
+			},3000)	
+		});
+		
+		$('#transaction_block form').submit(function(){
+			var last_group = $(this).find(".group:last");
+			if(	last_group.find('.currency').val()=='' && last_group.find('.categories').val()=='' && last_group.find('.account').val()=='')
+			{
+				remove_transaction(last_group.find('.remove'), 0);
+			}
+			
+			return true;
+		});
+		
+		
+		$('body').on('input', ".comment", function(){
+			$(this).autocomplete({
+				//delay: 500
+			});
+			autocompleteCommentInit($(this));	
+		});
+		
+		$('#transaction_block form input.date').click();
+		
+	});
+	
+</script>

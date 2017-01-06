@@ -1,0 +1,60 @@
+<script>
+	var timerId;
+	
+	function checkTimeout()
+	{
+		$.ajax({
+			type:'post',
+			url:'<?=$url?>',
+			success: function(result)
+			{
+				if(result.length!=0)
+				{
+					clearInterval(timerId);
+					var div = $('<div/>');
+					div.html(result);
+					div.find('[data-toggle="tooltip"]').tooltip();
+					
+					div.modalDialog({});
+					
+					var form = div.find('form');
+					form.form();
+					form.unbind('form.ajaxError');
+					form.unbind('form.success');
+					
+					form.on('form.success', function(event, msg, res){
+						$(this).form('setMessage', msg, 1);
+						div.modalDialog('destroy');
+						goCheckTimeout();
+					});
+					
+					form.on('form.error', function(event, msg, res){
+						//security
+						if(typeof(res.form_messages.security)!='undefined')
+						{
+							var msg = "Форма устарела! Окно будет перезагружено";
+							$(this).form('setMessage', msg, 0);
+							location.reload(); 
+						}
+					});
+					
+					form.on('form.ajaxError', function(event, msg, res){
+						window.location.reload();
+					});
+					
+					div.modalDialog('show');
+				}
+			}
+		});
+		
+	}
+	
+	function goCheckTimeout()
+	{
+		timerId = setInterval(function(){checkTimeout()}, <?=$frequency?>*1000);
+	}
+	
+	$(document).ready(function(){
+		goCheckTimeout();
+	});
+</script>

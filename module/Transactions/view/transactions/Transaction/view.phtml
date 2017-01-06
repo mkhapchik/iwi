@@ -1,0 +1,43 @@
+<section id="TableCategoriesExpen" class="block">
+	<header class="head">
+		<h1><?=$this->header?></h1>
+	</header>
+	<div class="body">
+		<table class="report">
+				 <tr>
+					<th>Дата</th>
+					<th>Сумма</th>
+					<th>Категория</th>
+					<th>Счет</th>
+					<th>Комментарий</th>
+				 </tr>
+				 <?php foreach ($this->paginator as $transaction) : // <-- change here!  ?>
+					 <tr>
+						<td><?= date('d.m.Y', strtotime($transaction['date']));?></td>
+						<td><?= $this->escapeHtml($transaction['amount']);?><span class="rub">Р</span></td>
+						<td><?= $this->escapeHtml($transaction['categories_name']);?></td>
+						<td><?= $this->escapeHtml($transaction['account_name']);?></td>
+						<td><?= $this->escapeHtml($transaction['comment']);?></td>
+					 </tr>
+				 <?php endforeach; ?>
+		</table>
+
+		<?php
+	
+		 // add at the end of the file after the table
+		 echo $this->paginationControl(
+			 // the paginator object
+			 $this->paginator,
+			 // the scrolling style 'all' | 'elastic' | 'sliding' | 'jumping'
+			 'sliding',
+			 // the partial to use to render the control
+			 'application/pagination/paginator.phtml',
+			 // the route to link to when a user clicks a control link
+			 array(
+				'route' => $this->routName,
+				'params' => $this->routeParams
+			 )
+		 );
+		 ?>
+	</div>
+</section>

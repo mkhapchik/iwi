@@ -1,0 +1,181 @@
+<style>
+	#TableCategoriesExpen{
+		max-width:100%;
+	}
+			
+	#TableCategoriesExpen h2{
+		text-align:center;
+	}
+
+	#TableCategoriesExpen table{
+		border-left:1px solid #333;
+	}
+
+	#TableCategoriesExpen li:first-child table{
+		border-left:0;
+	}
+
+	#TableCategoriesExpen table *{
+		font-size:0.98em;
+	}
+	
+	#TableCategoriesExpen table .balance{
+		color:#2e83ff;
+	}
+	
+	#TableCategoriesExpen table .overflow{
+		color:#f00;
+	}
+	
+	#TableCategoriesExpen table td{
+		width: 80px;
+	}
+	
+	
+	#TableCategoriesExpen table td:first-child{
+		white-space:nowrap;
+		width: auto;
+	}
+</style>
+
+<section class="block" id="TableCategoriesExpen">
+	<header class="head">
+		<h1>Сводная таблица расходов по категориям</h1>
+	</header>
+	<div class="body">
+		<div class="b-form b-form-inline">
+			<form>
+			<div class="form_element">
+				<label>
+					<span>Начало периода</span>
+					<input class="date" name="start" value="<?=$start?>">
+				</label>
+			</div>
+			<div class="form_element">
+				<label>
+					<span>Конец периода</span>
+					<input class="date" name="end" value="<?=$end?>">
+				</label>
+			</div>
+			<div class="form_element">
+				<input type="submit" value="Добавить">	
+			</div>
+			<div class="clear"></div>
+			</form>
+		</div>
+		<!-- Prev/next controls -->
+		<div class="jcarousel-control">
+			<a class="jcarousel-control-prev" href="#" data-jcarouselcontrol="true">‹ Prev</a>
+			<a class="jcarousel-control-next" href="#" data-jcarouselcontrol="true">Next ›</a>
+		</div>
+		
+		<div class="jcarousel">
+			<ul>
+				<?php 
+					foreach($this->report_table as $year=>$val):
+					foreach($val as $month=>$category_list):
+					$summary = $summary_table[$year][$month][0];
+				?>
+				<li>
+					<h2><?=date('F, Y', strtotime('01-'.$month.'-'.$year));?></h2>
+					<table>
+						<tr>
+							<th>Категория</th>
+							<th>Расход</th>
+							<th>Лимит</th>
+							<th>Остаток</th>
+						</tr>
+						<?php
+							foreach($category_list as $category):
+						?>
+							<tr>
+								<td><?=$category['name']?></td>
+								<td><?=$category['sum']?><span class="rub">Р</span></td>
+								<td><?=$category['amount_limit']?><span class="rub">Р</span></td>
+								<td <?=$category['overflow']>0? "class='overflow'" : ''?>><?=-$category['overflow']?><span class="rub">Р</span></td>
+							</tr>
+						
+						<?php
+							endforeach;
+						?>
+						<tr>
+							<td><b>Итого:</b></td>
+							<td><?=$summary['sum']?><span class="rub">Р</span></td>
+							<td><?=$summary['limit_sum']?><span class="rub">Р</span></td>
+							<td class="<?=$summary['balance']<0? "balance overflow" : 'balance'?>"><b><?=$summary['balance']?></b><span class="rub">Р</span></td>
+						</tr>
+						
+						
+						
+					</table>
+				</li>
+				<?php
+					endforeach;
+					endforeach;
+				?>
+			</ul>
+		</div>
+		
+		<!-- Prev/next controls -->
+		<div class="jcarousel-control">
+			<a class="jcarousel-control-prev" href="#" data-jcarouselcontrol="true">‹ Prev</a>
+			<a class="jcarousel-control-next" href="#" data-jcarouselcontrol="true">Next ›</a>
+		</div>
+		
+	</div>
+</section>
+
+<script>
+	function correctWidthCarousel()
+	{
+		var width_table 	= $('#TableCategoriesExpen .jcarousel li:first-child table').width();
+		var width_conteiner = $('#TableCategoriesExpen .jcarousel').width();
+		var n=1;
+		if(width_table>0 && width_conteiner>0) n = parseInt(width_conteiner/width_table);
+		width_conteiner = width_table * n + n;
+		$('#TableCategoriesExpen .jcarousel').css('width', width_conteiner+'px');
+		
+		return n;
+	}
+	
+	$(document).ready(function(){
+		var n = correctWidthCarousel();
+		
+		if(n==$('#TableCategoriesExpen .jcarousel li').length)	$('#TableCategoriesExpen .jcarousel-control').hide();
+		else $('#TableCategoriesExpen .jcarousel-control').show();
+		
+		
+        $('#TableCategoriesExpen .jcarousel').jcarousel({});
+
+        /*
+         Prev control initialization
+         */
+        $('.jcarousel-control-prev')
+            .on('jcarouselcontrol:active', function() {
+                $(this).removeClass('inactive');
+            })
+            .on('jcarouselcontrol:inactive', function() {
+                $(this).addClass('inactive');
+            })
+            .jcarouselControl({
+                // Options go here
+                target: '-=1'
+            });
+
+        /*
+         Next control initialization
+         */
+        $('.jcarousel-control-next')
+            .on('jcarouselcontrol:active', function() {
+                $(this).removeClass('inactive');
+            })
+            .on('jcarouselcontrol:inactive', function() {
+                $(this).addClass('inactive');
+            })
+            .jcarouselControl({
+                // Options go here
+                target: '+=1'
+            });
+    
+	});
+</script>

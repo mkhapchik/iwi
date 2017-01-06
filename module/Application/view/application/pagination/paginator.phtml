@@ -1,0 +1,58 @@
+<?php if ($this->pageCount && $this->pageCount>1): 
+if(!is_array($this->params)) $this->params=array();
+if(!is_array($this->options)) $this->options=array();
+?>
+    <div>
+        <ul class="pagination">
+            <!-- Previous page link -->
+            <?php if (isset($this->previous)): 
+			$opt = $this->options;
+			$opt['query']['page']=$this->previous;
+			?>
+                <li>
+					 <a href="<?php echo $this->url($this->route, $this->params, $opt); ?>">
+                        <<
+                    </a>
+                </li>
+            <?php else: ?>
+                <li class="disabled">
+                    <span><<</span>
+                </li>
+            <?php endif; ?>
+
+			<!-- Numbered page links -->
+            <?php foreach ($this->pagesInRange as $page): ?>
+                <?php if ($page != $this->current): 
+					$opt = $this->options;
+					$opt['query']['page']=$page;
+				?>
+                    <li>
+                        <a href="<?php echo $this->url($this->route, $this->params, $opt);?>">
+                            <?php echo $page; ?>
+                        </a>
+                    </li>
+                <?php else: ?>
+                    <li class="active">
+                        <span><?php echo $page; ?></span>
+                    </li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+
+            <!-- Next page link -->
+            <?php if (isset($this->next)): 
+				$opt = $this->options;
+				$opt['query']['page']=$this->next;
+			?>
+                <li>
+                    <a href="<?php echo $this->url($this->route, $this->params, $opt); ?>">
+                        >>
+                    </a>
+                </li>
+             <?php else: ?>
+                <li class="disabled">
+                    <span>>></span>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </div>
+ <?php endif; ?>

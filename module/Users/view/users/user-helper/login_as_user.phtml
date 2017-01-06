@@ -1,0 +1,9 @@
+<?php if($user->isAuth()): ?>
+<div class="bg-info">
+	Вы совершаете действия от имени пользователя <b><?=$user->name?> (<?=$user->login?>)</b>
+
+	<a href="<?=$this->url('users-manager', array('action'=>'restoreSession'))?>" type="submit" class="btn btn-default">
+		Вернуться в свой профиль
+	</a>
+</div>
+<?php endif;?>

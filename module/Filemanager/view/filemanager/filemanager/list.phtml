@@ -1,0 +1,31 @@
+<input type="hidden" id="current_dir" value="<?=$dir?>"/>
+
+<div class='bread_crumbs'>
+<?php foreach($bread_crumbs as $link=>$label): if($link):?>
+	<a href="<?=$link?>"><?=$label?></a>/
+	<?php else: ?>
+	<span><?=$label?></span>
+<?php endif; endforeach; ?>
+</div>
+
+<?php if($message):?>
+<div class="message">
+	<?=$message?>
+</div>
+<?php endif;?>
+
+<div class="items">
+<?php foreach($list as $path=>$fileinfo): ?>
+<div class="item <?=$fileinfo['class']?>">
+	<div class='link' title="<?=$fileinfo['basename']?>">
+		<?php if($fileinfo['is_img']):?>
+		<img width="80" height="50" src="/<?=$path?>" />
+		<?php endif; ?>
+		<span class="name"><?=$fileinfo['basename']?></span>
+	</div>
+	<label class='select'>
+		<input type='checkbox' value='<?=$path?>'>
+	</label>
+</div>
+<?php endforeach; ?>
+</div>

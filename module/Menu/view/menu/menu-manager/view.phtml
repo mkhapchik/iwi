@@ -1,0 +1,64 @@
+<?php $ah = $this->AuthHelper(); ?>
+
+<h1 class="page-header">Управление меню</h1>
+
+<div class="margin-bottom-40">
+	<a class="btn btn-primary btn-md" href="<?=$this->url('menu-manager', array('action'=>'add')) ;?>" title="Создать меню">
+		<span class="glyphicon glyphicon-plus"></span>Создать меню
+	</a>
+</div>
+
+<div class="filter margin-bottom-40">
+</div>
+
+<table class="table">
+	<tr>
+		<th>
+			<a class="sortable <?=$sortLinks['label']['dir']?>" href="<?=$sortLinks['label']['url']?>" data-toggle="tooltip" title="Нажмите для сортировки">
+				Название
+				<span class="glyphicon glyphicon-sort-by-alphabet"></span>
+				<span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+			</a>
+		</th>
+		<th></th>
+		<th>Код</th>
+		<th>Описание</th>
+		<th>
+			<a class="sortable <?=$sortLinks['is_active']['dir']?>" href="<?=$sortLinks['is_active']['url']?>" data-toggle="tooltip" title="Нажмите для сортировки">
+				Активность
+				<span class="glyphicon glyphicon glyphicon-sort-by-attributes"></span>
+				<span class="glyphicon glyphicon glyphicon-sort-by-attributes-alt"></span>
+			</a>
+		</th>
+	</tr>
+	<?php foreach ($this->paginator as $menu) : // <-- change here!  ?>
+		<tr class="<?=$menu->isActive() ? '' : 'inactive'?>">
+			<td>
+				<a data-toggle="tooltip" title="Редактировать" href="<?=$this->url('menu', array('action'=>'edit', 'id'=>$menu->id)) ;?>">
+					<?= $this->escapeHtml($menu->label);?>
+				</a>
+			</td>
+			<td>
+				<a data-toggle="tooltip" title="Редактировать" href="<?=$this->url('menu', array('action'=>'edit', 'id'=>$menu->id)) ;?>">
+					<span class="glyphicon glyphicon-pencil"></span>
+				</a>
+			</td>
+			<td><?= $this->escapeHtml($menu->name);?></td>
+			<td><?=$this->escapeHtml($menu->description)?></td>
+			<td><?=$menu->isActive() ? 'Активно' : 'Скрыто'?></td>
+		</tr>
+	<?php endforeach; ?>
+</table>
+
+<?php
+echo $this->paginationControl(
+	$this->paginator,
+	'sliding',
+	'application/pagination/paginator.phtml',
+	array(
+		'route' => $this->routName,
+		'params' => $this->routeParams,
+		'options' => $this->routeOptions
+	)
+ );
+ ?>

@@ -1,0 +1,174 @@
+<?php $ah = $this->AuthHelper(); ?>
+
+<h1 class="page-header"><?php echo $this->translate('Manage pages');?></h1>
+
+<div class="margin-bottom-40">
+	<a class="btn btn-primary btn-md" href="<?=$this->url($this->routName, array('action'=>'add'));?>" title="<?php echo $this->translate('Add page');?>">
+		<span class="glyphicon glyphicon-plus"></span><?php echo $this->translate('Add page');?>
+	</a>
+</div>
+
+<div class="filter margin-bottom-40">
+
+	<?php
+	//$form = $this->filterForm;
+
+	$this->filterForm->prepare();
+	$this->filterForm->setAttribute('class', 'form-inline');
+	echo $this->form()->openTag($this->filterForm);
+		
+	foreach($this->filterForm->get('filter') as $el):
+	
+	?>
+	
+		<?php if($el instanceof \Zend\Form\Element\Checkbox): 
+			$el->setUseHiddenElement(false);
+		?>
+			<div class="checkbox">
+				<label>
+					<?php
+						echo $this->formElement($el);
+						echo $el->getLabel(); 
+					?>
+				</label>
+			</div>
+		<?php else: ?>
+			<div class="form-group">
+			<?php
+				$el->setAttribute('class', 'form-control')
+				->setAttribute('placeholder', $el->getLabel())
+				->setAttribute('title', $el->getLabel())
+				->setAttribute('data-toggle', "tooltip")
+				->setAttribute('data-placement', "top");
+				echo $this->formElement($el);
+			?>
+			</div>	
+		<?php endif; ?>
+	
+	<?php endforeach; ?>
+	
+	<?php //$filter->get('is_system')?>
+	
+	<button type="submit" class="btn btn-default">Применить</button>
+	
+	<?php
+	echo $this->form()->closeTag(); 
+	?>
+	
+	<!--
+	<form class="form-inline">
+  <div class="form-group">
+    <label for="exampleInputName2">Name</label>
+    <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail2">Email</label>
+    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="jane.doe@example.com">
+  </div>
+  <button type="submit" class="btn btn-default">Send invitation</button>
+</form>
+-->
+</div>
+
+<table class="table">
+	<tr>
+		<th>
+			<a class="sortable <?=$sortLinks['name']['dir']?>" href="<?=$sortLinks['name']['url']?>" data-toggle="tooltip" title="Нажмите для сортировки">
+				<?php echo $this->translate('page name');?>
+				<span class="glyphicon glyphicon-sort-by-alphabet"></span>
+				<span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+			</a>
+		</th>
+		<th></th>
+		<th>
+			<a class="sortable <?=$sortLinks['date_last_modification']['dir']?>" href="<?=$sortLinks['date_last_modification']['url']?>" data-toggle="tooltip" title="Нажмите для сортировки">
+				Дата последнего изменения
+				<span class="glyphicon glyphicon glyphicon-sort-by-attributes"></span>
+				<span class="glyphicon glyphicon glyphicon-sort-by-attributes-alt"></span>
+			</a>
+		</th>
+		<th>
+			<a class="sortable <?=$sortLinks['date_creation']['dir']?>" href="<?=$sortLinks['date_creation']['url']?>" data-toggle="tooltip" title="Нажмите для сортировки">
+				Дата создания
+				<span class="glyphicon glyphicon glyphicon-sort-by-attributes"></span>
+				<span class="glyphicon glyphicon glyphicon-sort-by-attributes-alt"></span>
+			</a>
+		</th>
+		<th>
+			<a class="sortable <?=$sortLinks['author_id']['dir']?>" href="<?=$sortLinks['author_id']['url']?>" data-toggle="tooltip" title="Нажмите для сортировки">
+				Автор
+				<span class="glyphicon glyphicon-sort-by-alphabet"></span>
+				<span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+			</a>
+		</th>
+	</tr>
+	<?php foreach ($this->paginator as $page) : ?>
+		
+		<tr <?=$page->isActive() ? '' : "class='inactive'"?>>
+			<td>
+				
+				<a data-toggle="tooltip" title="Редактировать" href="<?=$this->url($page->route_name, array('action'=>'edit', 'id'=>$page->id)) ;?>">
+					<?= $this->escapeHtml($page->name);?>
+					<?php if(!$page->isActive()): ?>
+						<span class="glyphicon glyphicon-eye-close"></span>
+					<?php endif; ?>
+				</a>
+			</td>
+			<td>
+				<div class="controls">
+					<?php if($ah->isAllowed($page->route_id, 'view')): ?>
+						<?php if(!empty($page->uri) || $this->url($page->route_name, array('id'=>$page->route_param_id))!=$this->url($this->routName)):?>
+						<a data-toggle="tooltip" title="Просмотр страницы" target="_blanck" href="<?=empty($page->uri) ? $this->url($page->route_name, array('id'=>$page->route_param_id)): $page->uri?>">
+							<span class="glyphicon glyphicon-new-window"></span>
+						</a>
+						<?php else: ?>
+						<a data-toggle="tooltip" title="Обновить" href="<?=empty($page->uri) ? $this->url($page->route_name, array('id'=>$page->route_param_id)): $page->uri?>">
+							<span class="glyphicon glyphicon-refresh"></span>
+						</a>
+						<?php endif; ?>
+					<?php endif; ?>	
+					
+					<?php if($ah->isAllowed($page->route_id, 'edit')): ?>
+						<a data-toggle="tooltip" title="Редактировать" href="<?=$this->url($page->route_name, array('action'=>'edit', 'id'=>$page->id))?>">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</a>
+					<?php endif; ?>	
+					
+					<?php if($ah->isAllowed($page->route_id, 'del')): ?>
+						<a data-toggle="tooltip" title="Удалить" href="<?=$this->url($page->route_name, array('action'=>'del' , 'id'=>$page->id));?>">
+							<span class="glyphicon glyphicon-trash"></span>
+						</a>
+					<?php endif; ?>	
+					
+					<?php if($ah->isAllowed($page->route_id, 'activeToggle')): ?>
+						<?php if($page->isActive()):?>
+							<a data-toggle="tooltip" title="Скрыть страницу" href="<?=$this->url($page->route_name, array('action'=>'activeToggle' , 'id'=>$page->id));?>">
+								<span class="glyphicon glyphicon-check"></span>
+							</a>
+						<?php else: ?>
+							<a data-toggle="tooltip" title="Показать страницу" href="<?=$this->url($page->route_name, array('action'=>'activeToggle' , 'id'=>$page->id));?>">
+								<span class="glyphicon glyphicon-unchecked"></span>
+							</a>
+						<?php endif;?>
+					<?php endif; ?>
+				</div>
+			</td>
+			<td><?= date('d.m.Y', strtotime($page->date_last_modification));?></td>
+			<td><?= date('d.m.Y', strtotime($page->date_creation));?></td>
+			<td><?= $this->escapeHtml($page->author_name);?></td>
+		</tr>
+	<?php endforeach; ?>
+</table>
+
+<?php
+echo $this->paginationControl(
+	$this->paginator,
+	'sliding',
+	'application/pagination/paginator.phtml',
+	array(
+		'route' => $this->routName,
+		'params' => $this->routeParams,
+		'options' => $this->routeOptions
+	)
+ );
+?>

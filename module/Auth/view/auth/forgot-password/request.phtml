@@ -1,0 +1,20 @@
+<h1 class="page-header">Изменить пароль</h1>
+<div class="container-fluid">
+	
+	<?=$this->message($message, $is_success); ?>
+
+	<form action="" method="post">
+		<div class="form-group">
+			<label class="control-label">Введите Ваш логин</label>
+			<div class="">
+				<input type="text" name="login" class="form-control" value="<?=$login?>" />
+			</div>
+			<span class="help-block"></span>
+		</div>
+		
+		<div>
+			<button type="submit" name="submit" class="btn btn-primary btn-lg">Продолжить</button>
+		</div>
+	</form>
+
+</div>

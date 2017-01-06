@@ -1,0 +1,7 @@
+<?php foreach($this->collection as $col):?>
+<div class="group">
+	<?php foreach($col as $el): ?><div class="form_element"><?=$this->formRow($el);?></div><?php endforeach;?>	
+	<button class="remove" onclick="remove_transaction($(this), 400); return false;">-</button>
+	<div class="clear"></div>
+</div>
+<?php endforeach;?>

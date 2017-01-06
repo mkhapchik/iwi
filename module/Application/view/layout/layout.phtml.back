@@ -1,0 +1,61 @@
+<?php echo $this->doctype(); ?>
+<html lang="ru">
+	<head>
+		<meta charset="utf-8" />
+		<title><?=$this->title?></title>
+		<link rel="stylesheet" href="<?=$this->basePath()?>/css/__common.css" />
+		<script src="<?=$this->basePath()?>/js/lib/jquery-2.1.3.min.js"></script>
+		<script src="<?=$this->basePath()?>/js/lib/jquery-ui.min.js"></script>
+		<script src="<?=$this->basePath()?>/js/lib/jquery.form.min.js"></script>
+		<script src="<?=$this->basePath()?>/js/lib/jquery.jcarousel.min.js"></script>
+		<script src="<?=$this->basePath()?>/js/lib/dynamic-element.js"></script>
+		<script src="<?=$this->basePath()?>/js/lib/modalDialog.js"></script>
+		<script src="<?=$this->basePath()?>/js/lib/form.js"></script>
+		<script src="<?=$this->basePath()?>/js/lib/dynamic-select.js"></script>
+		<script src="<?=$this->basePath()?>/js/lib/filemanager.js"></script>
+		<script src="<?=$this->basePath()?>/js/lib/flot/jquery.flot.min.js"></script>
+		<script src="<?=$this->basePath()?>/js/lib/flot/jquery.flot.time.min.js"></script>
+		<script src="<?=$this->basePath()?>/js/lib/flot/jquery.flot.selection.min.js"></script>
+		<script src="<?=$this->basePath()?>/js/lib/flot/jquery.flot.resize.min.js"></script>
+		<script src="<?=$this->basePath()?>/js/lib/flot/jquery.flot.navigate.min.js"></script>
+		
+		<script src="<?=$this->basePath()?>/js/lib/loader.js"></script>
+		<script src="<?=$this->basePath()?>/js/init.js"></script>
+	</head>
+	<body>
+		<div class="site-overlay"></div>
+		<nav class="pushy pushy-left">
+			<?php // echo $this->MenuHelper(false); 
+			echo $this->MenuHelper('capital');
+			?>
+		</nav>
+		<section id="wrapper">
+			<section class="top_panel">	
+				<div class="menu-btn"><span class="icon">&#9776;</span> Меню</div>
+				<?php echo $this->AuthHelper()->user('auth/authHelper/user_old', 'auth/authHelper/guest_old'); ?>
+				<nav>
+					
+					<?php 
+						echo $this->MenuHelper('admin');
+						//echo $this->navigation('Navigation')->menu()->setPartial('application/navigation/menu')->render();
+						//echo $this->navigation('page_navigation')->test();
+					?>
+				</nav>
+			</section>
+			<section class="main">
+				<section class="view">
+					<?= $this->content; ?>
+				</section>
+				
+				<section class="clear"></section>
+			</section>
+			<section id="empty"></section>
+			<footer>
+				&copy; 2005 - <? echo date('Y'); ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
+			</footer>
+		</section>
+		
+		<?php echo $this->AuthHelper()->timeoutScript(); ?>
+		<script src="<?=$this->basePath()?>/js/lib/pushy.js"></script>
+	</body>
+</html>

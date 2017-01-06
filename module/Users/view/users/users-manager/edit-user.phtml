@@ -1,0 +1,206 @@
+<h1 class="page-header"><?=$title?></h1>
+<?php
+$form->prepare();
+
+$form->setAttribute('class', 'form-horizontal')->setAttribute('role', 'form');
+echo $this->form()->openTag($form);
+?>
+	
+	<?php if($edit_user && $edit_user->isSuper()): ?>
+		<div class="bg-info">
+			Пользователь является <b>"Суперпользователем"!</b>
+		</div>
+	<?php endif;?>
+	
+	<?php if($edit_user && $edit_user->isBlocked()): ?>
+		<div class="bg-warning">
+			<?php if($edit_user->isBlockedFlag()): ?>
+				Пользователь заблокирован с <b><?=date('d.m.Y H:i', strtotime($edit_user->date_blocked))?></b>
+			<?php elseif($edit_user->isTemporarilyBlocked()): ?>
+				Пользователь заблокирован
+				до <b><?=date('d.m.Y H:i', strtotime($edit_user->temporary_block))?></b>
+			<?php endif; ?>
+		</div>
+	<?php endif; ?>
+	
+	
+	<?php echo $this->message($message, $is_success); ?>
+		
+	<!-- blocked -->
+	<div class="col-lg-6"></div>
+	<div class="col-lg-6">
+		<div class="form-group">
+			<div class="checkbox padding-left-20 col-sm-offset-5 col-md-offset-3 col-lg-offset-5">
+				<label class="">
+				<?php 
+					echo $this->formElement($form->get('blocked'));
+					echo $form->get('blocked')->getLabel();
+				?>
+				</label>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="col-lg-6"></div>
+	
+	<!-- temporary_block -->
+	<div class="col-lg-6">
+		<div class="form-group">
+			<?php $is_error_temporary_block = array_key_exists($form->get('temporary_block')->getName(), $form->getMessages()) ? 1 : 0; ?>
+			<div class="<?=$is_error_temporary_block ? 'has-error' : ''?>">
+				<label class="control-label col-sm-5 col-md-3 col-lg-5" for=""><?=$form->get('temporary_block')->getLabel()?>:</label>
+				<div class="input-group col-sm-7 col-md-6 col-lg-7">
+					<span class="input-group-addon">
+						<?php echo $this->formElement($form->get('swich_disable_temporary_block')); ?>
+					</span>
+					<?php echo $this->formElement($form->get('temporary_block')); ?>
+				</div>
+				<span class="help-block"><?php echo $this->formElementErrors($form->get('temporary_block'), array('class' => 'list-unstyled help-inline'));?></span>
+			</div>
+		</div>
+	</div>	
+	
+	<div class="clearfix visible-lg-block"></div>
+	
+	<div class="col-lg-6">
+		<?php echo $this->formGroup()
+			->setLabelAttributes(array('class'=>'control-label col-sm-5 col-md-3 col-lg-5'))
+			->setInputGroupAttributes(array('class'=>'col-sm-7 col-md-6 col-lg-7'))
+			->render($form->get('name'));?>
+	</div>
+	
+	<div class="col-lg-6">
+		<?php echo $this->formGroupEmail()
+			->setLabelAttributes(array('class'=>'control-label col-sm-5 col-md-3 col-lg-5'))
+			->setInputGroupAttributes(array('class'=>'input-group col-sm-7 col-md-6 col-lg-7'))
+			->render($form->get('email'));?>
+	</div>
+	
+	<div class="col-lg-6">
+		<?php echo $this->formGroup()
+			->setLabelAttributes(array('class'=>'control-label col-sm-5 col-md-3 col-lg-5'))
+			->setInputGroupAttributes(array('class'=>'input-group col-sm-7 col-md-6 col-lg-7'))
+			->render($form->get('login'));?>
+	</div>
+	
+	<div class="col-lg-6">
+		<?php echo $this->formGroupPwdGen()
+			->setLabelAttributes(array('class'=>'control-label col-sm-5 col-md-3 col-lg-5'))
+			->setInputGroupAttributes(array('class'=>'input-group col-sm-7 col-md-6 col-lg-7'))
+			->render($form->get('pwd'));?>
+	</div>
+	<?php
+	/*
+	echo $this->FormGroupCheckbox()
+		->setWrapperAttributes(array('class'=>'form-group col-lg-offset-6 col-lg-12 margin-top-offset'))
+		->render($form->get('pwd'));
+	*/
+	?>
+	
+	<div class="col-lg-offset-6 col-lg-6 margin-top-offset">
+		<div class="col-sm-offset-5 col-md-offset-3 col-lg-offset-6">
+			<?php echo $this->formGroupCheckbox($form->get('sendPwd')); ?>
+		</div>	
+	</div>	
+
+	<div class="clearfix visible-lg-block"></div>
+	
+    <?php 
+        $roles = $form->get('roles');
+        echo $this->partial('users/users-manager/roles.phtml', array('roles'=>$roles, 'select_roles'=>$form->get('select_roles')));
+    ?> 
+    
+    
+
+	<div class="clearfix visible-lg-block"></div>
+	<div class="form-group-fixed col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+		<?php if($can_delete): ?>
+		<div class="pull-left">
+			<button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#ConfirmDelete" >Удалить</button>
+		</div>
+		<?php endif;?>
+		<div class="pull-right">
+			<button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#ConfirmCancel" >Отменить</button>
+			<?php 
+				$form->get('submit')->setAttribute('class','btn btn-primary btn-lg');
+				echo $this->formElement($form->get('submit'));
+			?>
+		</div>
+	</div>
+</form>	
+<div class="modal fade" tabindex="-1" role="dialog" id="ConfirmCancel">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Вы уверены?</h4>
+			</div>
+			<div class="modal-body">
+				<p>Вы уверены, что хотите закрыть форму? Несохранённые данные будут потеряны!</p>
+			</div>
+			<div class="modal-footer">
+				<a href="<?=$back?>" class="btn btn-danger">Закрыть форму</a>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Продолжить работу</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<?php if($can_delete): ?>
+<div class="modal fade" tabindex="-1" role="dialog" id="ConfirmDelete">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Удалить пользователя <b><?=$edit_user->name?></b>?</h4>
+			</div>
+			<div class="modal-body">
+				<p>Вы уверены, что хотите удалить пользователя <b><?=$edit_user->name?></b>?</p>
+				<p>Все данные, связанные с пользователем будут удалены безвозвратно!</p>
+			</div>
+			<div class="modal-footer">
+				<form id="deleteUser" method="post" action="<?=$this->url('users-manager', array('action'=>'deleteUser', 'id'=>$edit_user->id))?>">
+					<button type="submit" class="btn btn-danger">Удалить</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+				</form>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<?php endif;?>
+	
+
+
+<?php if($can_delete): ?>
+<script>
+	$(document).ready(function(){
+		/* Форма подтверждения удаления */
+		var ConfirmDelete = $('#ConfirmDelete');
+		var ConfirmDeleteFrom = $('#ConfirmDelete form');
+		
+		ConfirmDeleteFrom.form();
+		ConfirmDeleteFrom.unbind('form.success');
+		ConfirmDeleteFrom.unbind('form.error');
+		ConfirmDeleteFrom.unbind('form.ajaxError');
+		
+		ConfirmDeleteFrom.on('form.beforeSubmit', function(){
+			ConfirmDelete.find('.modal-body .message').remove();
+		});
+		
+		ConfirmDeleteFrom.on('form.success', function(event, msg, res){
+			window.location.href = "<?=$this->url('users-manager')?>";
+		});
+					
+		ConfirmDeleteFrom.on('form.error', function(event, msg, res){
+			var d = ConfirmDeleteFrom.form('decoratorMsg', msg, 0);
+			ConfirmDelete.find('.modal-body').prepend(d);
+		});
+		
+		ConfirmDeleteFrom.on('form.ajaxError', function(event, msg){
+			var d = ConfirmDeleteFrom.form('decoratorMsg', msg, 0);
+			ConfirmDelete.find('.modal-body').prepend(d);
+		});	
+	});
+</script>
+<?php endif; ?>

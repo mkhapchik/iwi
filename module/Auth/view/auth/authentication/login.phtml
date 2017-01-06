@@ -1,0 +1,101 @@
+<style>
+	
+	.captcha{
+		float:left;
+		cliar:both;
+	}
+	
+	.captcha .has-error{
+		float:left;
+	}
+
+	.captcha img{
+		float:left;
+	}
+	
+	.captcha .form-control{
+		width:50%;
+		float:left;
+		margin-left:50px;
+	}
+	
+	.captcha .help-block{
+		right: 10px;
+		bottom:23px;
+	}
+		
+	.refresh_captcha{
+		clear:both;
+		float:left;
+	}
+</style>
+
+<?php if($title):?><h1 class="page-header"><?=$title?></h1><?endif;?>
+
+
+
+<div class="container-middle">
+	<?php echo $this->message($message, $is_success); ?>
+    <?php
+		$form->prepare();
+		$form->setAttribute('class', 'ajaxform');
+		echo $this->form()->openTag($form);
+		echo $this->formHidden($form->get('submit'));
+		echo $this->formHidden($form->get('form_name'));
+		echo $this->formElement($form->get('security'));
+		echo $this->formGroup($form->get('login'));
+		echo $this->formGroupPwdShowHide($form->get('pwd'));
+	?>
+	
+	<?php if($form->has('captcha')) echo $this->formGroupCaptcha()
+		->canRefresh($this->refresh_captcha_access)
+		->render($form->get('captcha')); 
+	?>
+	
+	<div class="margin-top-20 submit_container">
+		<div class="pull-left margin-right-30">
+			<?php 
+				$form->get('submit')->setAttribute('class', 'btn btn-primary btn-lg');
+				echo $this->formElement($form->get('submit'));
+			?>		
+		</div>
+		<div class="">
+			<a href="<?=$this->url('password/request')?>">Забыли пароль?</a>
+		</div>
+	</div>
+	<?php
+		echo $this->form()->closeTag();
+	?>
+	<div class="clearfix"></div>
+</div>
+
+<script>
+	
+	$(document).ready(function(){
+		$('body').on('click', '.captcha img', function(){
+			refresh_captcha($(this).closest('.captcha'), '/auth/refresh_captcha');
+		});
+		
+		$('body').on('click', '.captcha a.refresh_captcha', function(){
+			refresh_captcha($(this).closest('.captcha'), '/auth/refresh_captcha');
+			return false;
+		});
+		
+		$('#loginForm').on('form.error', function(event, msg, res){
+			if(res.captcha_html) setCaptcha(res.captcha_html);
+		});
+		
+		$('#loginForm').on('form.success', function(event, msg, res){
+			if(res.captcha_html) setCaptcha(res.captcha_html);
+		});	
+
+	});
+	
+	function setCaptcha(captcha_html)
+	{
+		var submit_container = $('#loginForm').find('.submit_container');
+		
+		submit_container.prev('.captcha').remove();
+		submit_container.before(captcha_html);
+	}
+</script>

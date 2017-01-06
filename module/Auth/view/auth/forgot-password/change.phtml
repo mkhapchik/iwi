@@ -1,0 +1,27 @@
+	
+<h1 class="page-header">Восстановление доступа</h1>
+
+<div class="container-fluid">
+	<?=$this->message($message, $is_success); ?>
+		
+	<?php
+	if($is_acsess_token):
+		//$form = $this->form;
+		$form->prepare();
+		echo $this->form()->openTag($form);
+		//foreach($form as $el):
+			echo $this->formElement($form->get('security'));
+			echo $this->formGroup($form->get('pwd'));
+			echo $this->formGroup($form->get('pwd_confirm'));
+			echo $this->formGroupCheckbox($form->get('close_session'));
+			echo $this->formGroupSubmit($form->get('submit'));
+		?>
+			
+			
+		<?php 
+		//endforeach; 
+		echo $this->form()->closeTag();
+	endif;
+	?>	
+	<div class="clear"></div>
+</div>

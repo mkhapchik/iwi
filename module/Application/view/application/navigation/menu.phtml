@@ -1,0 +1,17 @@
+<?php
+/*DEPRECATED*/
+if(count($this->container)>0):?>
+<ul>
+<?php foreach ($this->container as $page): ?>
+	
+	<li>
+		<a <?=$page->active?"class='active'":""?> href="<?=$page->href?>">
+			<?=$page->label?>
+		</a>
+		
+		<?= $this->partialLoop($this->__template, array(array('container'=>$page))) ?>
+		
+	</li>
+<?php endforeach; ?>
+</ul>
+<?php endif;?>
