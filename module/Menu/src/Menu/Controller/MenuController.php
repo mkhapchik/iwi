@@ -5,6 +5,7 @@ use Menu\Entity\MenuItem;
 use Pages\Controller\PageController;
 use Zend\View\Model\ViewModel;
 use Exception;
+use Zend\Form\Form;
 use Menu\Entity\Menu;
 
 class MenuController extends PageController
@@ -159,49 +160,21 @@ class MenuController extends PageController
 
     public function addItemAction()
     {
-        $menuId = (int)$this->params()->fromRoute('id', 0);
+        $menuId = (int)$this->params()->fromRoute('id', null);
         if (!$menuId) return $this->redirect()->toRoute('menu-manager', array('action' => 'view'));
 
-        $is_success = 0;
+        $is_success = 1;
         $message = '';
 
-        $sm = $this->getServiceLocator();
-
-        $menuItemsTable = $sm->get('Menu\Model\MenuItemsTable');
-        $pageModel = $sm->get('Pages\Model\PageModel');
-
-        $item = new MenuItem();
-
-        $form = $sm->get('Menu\Form\MenuItemForm');
-        $form->bind($item);
+        $item = $this->getItem($menuId);
+        $form = $this->getItemForm($item);
 
         $request = $this->getRequest();
-
         if ($request->isPost()) {
             try {
-                $post = $request->getPost()->toArray();
-
-                $form->setData($post);
-
-                if (!$form->isValid()) {
-                    throw new Exception('');
-                }
-
-                if ($item->type === 'page') {
-                    $item->uri = null;
-                    $pageId = (int)$request->getPost('page');
-                    if($pageId) {
-                        $page = $pageModel->getPageById($pageId);
-                        if($page) $item->route_id = $page->route_id;
-                        else throw new Exception("Page #$pageId not found.");
-
-                    }
-                }else{
-                    $item->route_id = null;
-                }
-
-                $itemId = $menuItemsTable->addMenuItem($item);
-                return $this->redirect()->toRoute('menu', array('action' => 'editItem', 'id'=>$menuId, 'itemId'=>$itemId));
+                $postData = $request->getPost()->toArray();
+                $this->processItem($form, $item, $postData);
+                return $this->redirect()->toRoute('menu', array('action' => 'editItem', 'id'=>$item->parent_menu_id, 'itemId'=>$item->id));
             }
             catch (Exception $ex) {
                 $is_success = 0;
@@ -226,62 +199,29 @@ class MenuController extends PageController
 
     public function editItemAction()
     {
-        $menuId = (int)$this->params()->fromRoute('id', 0);
-        $itemId = (int)$this->params()->fromRoute('itemId', 0);
-        if (!$menuId || !$itemId) return $this->redirect()->toRoute('menu-manager', array('action' => 'view'));
+        $menuId = (int)$this->params()->fromRoute('id', null);
+        if (!$menuId) return $this->redirect()->toRoute('menu-manager', array('action' => 'view'));
 
-        $is_success = 0;
+        $itemId = (int)$this->params()->fromRoute('itemId', null);
+        if (!$itemId) return $this->redirect()->toRoute('menu', array('action' => 'addItem', 'id'=>$menuId));
+
+        $is_success = 1;
         $message = '';
 
-        $sm = $this->getServiceLocator();
-
-        $menuItemsTable = $sm->get('Menu\Model\MenuItemsTable');
-        $pageModel = $sm->get('Pages\Model\PageModel');
-
-        $item = $menuItemsTable->getMenuItem($itemId);
-
-        $form = $sm->get('Menu\Form\MenuItemForm');
-        $form->bind($item);
-
-        if ($item->type === 'page') {
-            $page = $pageModel->getPageByRouteId($item->route_id);
-            if ($page) {
-                $form->setData(array('page' => $page->id));
-            }
-        }
+        $item = $this->getItem($menuId, $itemId);
+        $form = $this->getItemForm($item);
 
         $request = $this->getRequest();
 
         if ($request->isPost()) {
+            $postData = array_merge_recursive(
+                $request->getPost()->toArray()
+                //$request->getFiles()->toArray()
+            );
+
             try {
-                $post = array_merge_recursive(
-                    $request->getPost()->toArray()
-                    //$request->getFiles()->toArray()
-                );
-
-                $form->setData($post);
-
-                if (!$form->isValid()) {
-                    throw new Exception('');
-                }
-
-                //var_dump($item->icon_img);
-
-                if ($item->type === 'page') {
-                    $item->uri = null;
-                    $pageId = (int)$request->getPost('page');
-                    if($pageId) {
-                        $page = $pageModel->getPageById($pageId);
-                        if($page) $item->route_id = $page->route_id;
-                        else throw new Exception("Page #$pageId not found.");
-
-                    }
-                }else{
-                    $item->route_id = null;
-                }
-
-                $menuItemsTable->updateMenuItem($item);
-                return $this->redirect()->toRoute('menu', array('action' => 'editItem', 'id'=>$menuId, 'itemId'=>$itemId));
+                $this->processItem($form, $item, $postData);
+                return $this->redirect()->toRoute('menu', array('action' => 'editItem', 'id'=>$item->parent_menu_id, 'itemId'=>$item->id));
             }
             catch (Exception $ex) {
                 $is_success = 0;
@@ -307,13 +247,85 @@ class MenuController extends PageController
         return $view;
     }
 
-    private function processItem(&$item, &$form){
+    private function getItem($menuId, $itemId=null, $parentId=0){
+        if($itemId) {
+            $sm = $this->getServiceLocator();
+            $menuItemsTable = $sm->get('Menu\Model\MenuItemsTable');
+            $item = $menuItemsTable->getMenuItem($itemId);
+        }else{
+            $item = new MenuItem();
+            $item->parent_menu_id = $menuId;
+            $item->parent_item_id = $parentId;
+        }
+        return $item;
+    }
 
+    private function getItemForm($item){
+        $sm = $this->getServiceLocator();
+
+        $form = $sm->get('Menu\Form\MenuItemForm');
+        $form->bind($item);
+
+        if ($item->type === 'page' && $item->route_id) {
+            $pageModel = $sm->get('Pages\Model\PageModel');
+            $page = $pageModel->getPageByRouteId($item->route_id);
+            if ($page) {
+                $form->setData(array('page' => $page->id));
+            }
+        }
+
+        return $form;
+    }
+
+    private function processItem(Form &$form, MenuItem &$item, $postData)
+    {
+        $sm = $this->getServiceLocator();
+
+        $form->setData($postData);
+
+        if (!$form->isValid()) {
+            throw new Exception('');
+        }
+
+        if ($item->type === 'page') {
+            $item->uri = null;
+            $pageId = (int)$postData['page'];
+            if ($pageId) {
+                $pageModel = $sm->get('Pages\Model\PageModel');
+                $page = $pageModel->getPageById($pageId);
+
+                if ($page) $item->route_id = $page->route_id;
+                else throw new Exception("Page #$pageId not found.");
+            }
+        } else {
+            $item->route_id = null;
+        }
+
+        $menuItemsTable = $sm->get('Menu\Model\MenuItemsTable');
+
+        if($item->id){
+            $menuItemsTable->updateMenuItem($item);
+        }else{
+            $item->id = $menuItemsTable->addMenuItem($item);
+        }
     }
 
     public function delItemAction()
     {
+        $menuId = (int)$this->params()->fromRoute('id', null);
+        $itemId = (int)$this->params()->fromRoute('itemId', null);
+        if(!$itemId) throw new Exception('Invalid parameter itemId');
 
+        $sm = $this->getServiceLocator();
+        $menuItemsTable = $sm->get('Menu\Model\MenuItemsTable');
+        $menuItemsTable->delMenuItem($itemId);
+
+        if ($menuId) {
+            return $this->redirect()->toRoute('menu', array('action' => 'edit', 'id'=>$menuId));
+        }
+        else{
+            return $this->redirect()->toRoute('menu-manager', array('action' => 'view'));
+        }
     }
 
     public function activeToggleItemAction()

@@ -74,7 +74,7 @@ class MenuItemsTable extends TableGateway
     
     public function delMenuItem($itemId)
     {
-        
+        $this->delete(array('id'=>$itemId));
     }
 	
 	public function getMenuItem($itemId){
