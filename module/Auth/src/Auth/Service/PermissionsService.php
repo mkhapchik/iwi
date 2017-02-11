@@ -51,5 +51,12 @@ class PermissionsService implements ServiceLocatorAwareInterface
                 
         $permissionsTable->deletePermissionsForRole($routeId, $except_roles, $selectAllowedRoles, $allowedActionsKeys);
     }
+
+    public function deletePermissions($routeId){
+        $permissionsTable = $this->sm->get('PermissionsTable');
+        $permissionsTable->deletePermissionsForRoute($routeId);
+    }
+
+
 	
 }

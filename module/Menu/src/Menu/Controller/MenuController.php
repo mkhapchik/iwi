@@ -4,9 +4,9 @@ namespace Menu\Controller;
 use Menu\Entity\MenuItem;
 use Pages\Controller\PageController;
 use Zend\View\Model\ViewModel;
+use Application\Service\Tree;
 use Exception;
 use Zend\Form\Form;
-use Menu\Entity\Menu;
 
 class MenuController extends PageController
 {
@@ -44,7 +44,7 @@ class MenuController extends PageController
         $items = $menuItemsTable->getItems($menu->id);
         $menu->setItems($items);
 
-        $serviceTree = new \Application\Service\Tree();
+        $serviceTree = new Tree();
         $serviceTree->setSourceData($items);
         $tree = $serviceTree->createTree();
 
@@ -82,9 +82,6 @@ class MenuController extends PageController
                 # сохранение пунктов меню
                 $items = $menu->getItems();
                 $this->saveItemsPosition($items);
-
-                $message = '';
-                $is_success = 1;
 
                 return $this->redirectToRefererOrDefaultRoute('pages-manager', array('action' => 'view'));
 
@@ -130,7 +127,27 @@ class MenuController extends PageController
 
     public function delAction()
     {
+        $this->registerReferer();
 
+        $id = (int)$this->params()->fromRoute('id', 0);
+        if (!$id) throw new Exception("id is not isset");
+
+        $menuTable = $this->serviceLocator->get('Menu\Model\MenuTable');
+        $menu = $menuTable->getMenu($id);
+        if (!$menu) throw new Exception("menu #$id not found");
+
+        $permissionsService = $this->serviceLocator->get('PermissionsService');
+        $permissionsService->deletePermissions($menu->route_id);
+
+        $routesTable = $this->serviceLocator->get('RoutesTable');
+        $routesTable->delRoute($menu->route_id);
+
+        $menuItemsTable = $this->serviceLocator->get('Menu\Model\MenuItemsTable');
+        $menuItemsTable->delItems($menu->id);
+
+        $menuTable->delMenu($menu->id);
+
+        $this->redirect()->toRoute('menu-manager', array('action' => 'view'));
     }
 
     public function activeToggleAction()
@@ -163,38 +180,7 @@ class MenuController extends PageController
         $menuId = (int)$this->params()->fromRoute('id', null);
         if (!$menuId) return $this->redirect()->toRoute('menu-manager', array('action' => 'view'));
 
-        $is_success = 1;
-        $message = '';
-
-        $item = $this->getItem($menuId);
-        $form = $this->getItemForm($item);
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            try {
-                $postData = $request->getPost()->toArray();
-                $this->processItem($form, $item, $postData);
-                return $this->redirect()->toRoute('menu', array('action' => 'editItem', 'id'=>$item->parent_menu_id, 'itemId'=>$item->id));
-            }
-            catch (Exception $ex) {
-                $is_success = 0;
-                $message = $ex->getMessage();
-            }
-        }
-
-        $title = "Добавление пункта меню";
-        $this->layout()->setVariable('title', $title);
-        $params = array(
-            'title' => $title,
-            'form' => $form,
-            'is_success' => $is_success,
-            'message' => $message
-        );
-
-        $view = new ViewModel($params);
-        $view->setTemplate('menu/menu/formItem');
-
-        return $view;
+        return $this->editItem($menuId);
     }
 
     public function editItemAction()
@@ -205,6 +191,10 @@ class MenuController extends PageController
         $itemId = (int)$this->params()->fromRoute('itemId', null);
         if (!$itemId) return $this->redirect()->toRoute('menu', array('action' => 'addItem', 'id'=>$menuId));
 
+        return $this->editItem($menuId, $itemId);
+    }
+
+    private function editItem($menuId, $itemId=null){
         $is_success = 1;
         $message = '';
 
@@ -216,12 +206,12 @@ class MenuController extends PageController
         if ($request->isPost()) {
             $postData = array_merge_recursive(
                 $request->getPost()->toArray()
-                //$request->getFiles()->toArray()
+            //$request->getFiles()->toArray()
             );
 
             try {
                 $this->processItem($form, $item, $postData);
-                return $this->redirect()->toRoute('menu', array('action' => 'editItem', 'id'=>$item->parent_menu_id, 'itemId'=>$item->id));
+                return $this->redirect()->toRoute('menu', array('action' => 'edit', 'id'=>$item->parent_menu_id));
             }
             catch (Exception $ex) {
                 $is_success = 0;
@@ -230,15 +220,19 @@ class MenuController extends PageController
         }
 
 
-        $title = "Редактирование пункта меню";
+        $title = $itemId ? "Редактирование пункта меню" : "Добавление пункта меню";
 
         $this->layout()->setVariable('title', $title);
+
+        $allowedActions = $this->getAllowedActionList(true);
 
         $params = array(
             'title' => $title,
             'form' => $form,
             'is_success' => $is_success,
-            'message' => $message
+            'message' => $message,
+            'allowedActions' => $allowedActions,
+            'item'=>$item
         );
 
         $view = new ViewModel($params);
@@ -316,8 +310,10 @@ class MenuController extends PageController
         $itemId = (int)$this->params()->fromRoute('itemId', null);
         if(!$itemId) throw new Exception('Invalid parameter itemId');
 
-        $sm = $this->getServiceLocator();
-        $menuItemsTable = $sm->get('Menu\Model\MenuItemsTable');
+        $tree = $this->createTree($menuId, $itemId);
+        $this->delChildrenItems($tree);
+
+        $menuItemsTable = $this->getServiceLocator()->get('Menu\Model\MenuItemsTable');
         $menuItemsTable->delMenuItem($itemId);
 
         if ($menuId) {
@@ -325,6 +321,26 @@ class MenuController extends PageController
         }
         else{
             return $this->redirect()->toRoute('menu-manager', array('action' => 'view'));
+        }
+    }
+
+    private function createTree($menuId, $parentId=0){
+        $sm = $this->getServiceLocator();
+        $menuItemsTable = $sm->get('Menu\Model\MenuItemsTable');
+        $items = $menuItemsTable->getItems($menuId);
+        $serviceTree = new \Application\Service\Tree();
+        $serviceTree->setSourceData($items);
+        $tree = $serviceTree->createTree($parentId);
+        return $tree;
+    }
+
+    private function delChildrenItems($tree){
+        $menuItemsTable = $this->getServiceLocator()->get('Menu\Model\MenuItemsTable');
+        foreach($tree as $item){
+            if($item->hasChildren()){
+                $this->delChildrenItems($item->getChildren());
+            }
+            $menuItemsTable->delMenuItem($item->id);
         }
     }
 

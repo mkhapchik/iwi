@@ -13,5 +13,5 @@
 		<?php echo $item->label;?>
 		<span class="glyphicon glyphicon-pencil"></span>
 	</a>
-    <?php echo $this->partial('menu/menu/tree.phtml', array('tree'=>$item->getChildren(), 'collection'=>$collection)); ?>
+    <?php echo $this->partial('menu/menu/tree_items.phtml', array('tree'=>$item->getChildren(), 'collection'=>$collection)); ?>
 </li>

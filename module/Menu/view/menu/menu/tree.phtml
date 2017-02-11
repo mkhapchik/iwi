@@ -1,3 +1,43 @@
-<ul class="connectedSortable">
-    <?php if(count($tree)>0) foreach($tree as $item) echo $this->partial('menu/menu/tree_item.phtml', array('item'=>$item, 'collection'=>$collection)); ?>
-</ul>
+<?php if(isset($menuId)):?>
+    <div class="tree">
+        <h3>
+            Пункты меню
+            <a href="<?=$this->url("menu", array('action'=>'addItem', 'id'=>$menuId));?>" class="btn btn-primary pull-right">
+                <span class="glyphicon glyphicon-plus"></span>
+                Добавить
+            </a>
+        </h3>
+
+        <?php echo $this->partial('menu/menu/tree_items.phtml', array('tree'=>$tree, 'collection'=>$collection));?>
+    </div>
+<?php endif;?>
+
+<script>
+    $(function() {
+        $( ".tree ul" ).sortable({
+            connectWith: ".connectedSortable",
+            placeholder: "placeholder",
+            update: function(event, ui){
+                if(ui.sender){
+                    var parentId = $(this).parent().find('>.id').val() || 0;
+                    ui.item.find('.parentId').val(parentId);
+                }
+            },
+            stop: function(event, ui){
+                recalcPosition($('.tree'));
+            }
+        }).disableSelection();
+    });
+
+    function recalcPosition($parent)
+    {
+        var $li = $parent.find('>ul>li');
+        if($li.length>0)
+        {
+            $li.each(function(i){
+                $(this).find('.ord').val(i*10);
+                recalcPosition($(this));
+            });
+        }
+    }
+</script>

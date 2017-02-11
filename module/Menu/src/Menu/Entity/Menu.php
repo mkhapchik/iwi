@@ -24,7 +24,12 @@ class Menu
 	*  Активность меню
 	*/
 	public $is_active;
-    
+
+    /**
+     * Идентификатор маршрута
+     */
+    public $route_id;
+
     /**
     *  Права доступа 
     */
@@ -58,7 +63,7 @@ class Menu
     
     public function getPermissions()
     {
-        if(!isset($this->permissions)) throw new Exception("permissions is not isset");
+        if(!isset($this->permissions)) throw new \Exception("permissions is not isset");
         return $this->permissions;
     }
     

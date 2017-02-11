@@ -1,12 +1,10 @@
 <?php
 namespace Menu\Model;
 
-//use Application\Model\AbstractTable;
 use Application\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Update;
 use Zend\Db\Sql\Where;
-use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\Sql\Delete;
 use Menu\Entity\Menu;
 
 class MenuTable extends TableGateway
@@ -138,9 +136,9 @@ class MenuTable extends TableGateway
 		return $resultSet->current();
 	}
 	
-    public function addMenu(Menu $page)
+    public function addMenu(Menu $menu)
 	{
-		$data = array(
+        $data = array(
             'name'  =>  $menu->name, 
             'label' =>  $menu->label,
             'description'   =>  $menu->description
@@ -160,6 +158,16 @@ class MenuTable extends TableGateway
         );
 
         $this->update($data, array('id'=>$menu->id));
+    }
+
+    public function delMenu($menuId){
+        $menuId = (int)$menuId;
+        $query = "DELETE FROM {$this->table['menu']} WHERE id=$menuId";
+        $this->query($query);
+    }
+
+    public function setRoute($routeId, $menuId){
+        $this->update(array('route_id' => $routeId), array('id'=>$menuId));
     }
     
     public function setActive($menuId)

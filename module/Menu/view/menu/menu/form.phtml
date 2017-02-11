@@ -47,51 +47,17 @@ echo $this->form()->openTag($form);
 	<?=$this->partial('pages/page/permissions.phtml', array('group'=>$form->get('group'), 'permissions'=>$form->get('permissions')));?>
 	
     <div class="clearfix"></div>
-    
-    <div class="tree">
-        <h3>
-			Пункты меню
-			<a href="<?=$this->url("menu", array('action'=>'addItem', 'id'=>$menu->id));?>" class="btn btn-primary pull-right">
-				<span class="glyphicon glyphicon-plus"></span>
-				Добавить
-			</a>
-		</h3>
-		
-        <?php echo $this->partial('menu/menu/tree.phtml', array('tree'=>$tree, 'collection'=>$form->get('items')));?>
-    </div>
-    
-    <script>
-        $(function() {
-            $( ".tree ul" ).sortable({
-                connectWith: ".connectedSortable",
-                placeholder: "placeholder",
-                update: function(event, ui){
-                    if(ui.sender){
-                        var parentId = $(this).parent().find('>.id').val() || 0;
-                        ui.item.find('.parentId').val(parentId);
-                    }
-                },
-                stop: function(event, ui){
-                    recalcPosition($('.tree'));    
-                }
-            }).disableSelection();
-        });
-        
-        function recalcPosition($parent)
-        {
-            var $li = $parent.find('>ul>li');
-            if($li.length>0)
-            {
-                $li.each(function(i){
-                    $(this).find('.ord').val(i*10);
-                    recalcPosition($(this));
-                });
-            }
-        }
-    </script>
+
+	<?php echo $this->partial('menu/menu/tree.phtml', array('menuId'=>$menu->id, 'tree'=>$tree, 'collection'=>$form->get('items')));?>
+
     
 	<div class="clearfix visible-lg-block"></div>
 	<div class="form-group-fixed col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+		<?php if(in_array('del', $allowedActions)): ?>
+			<div class="pull-left">
+				<button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#ConfirmDelete" >Удалить</button>
+			</div>
+		<?php endif;?>
 		<div class="pull-right">
 			<button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#ConfirmCancel" >Отменить</button>
 			<?php 
@@ -120,7 +86,8 @@ echo $this->form()->openTag($form);
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<?php if(in_array('del', $allowedActions)): ?>
+<?php
+if(in_array('del', $allowedActions)): ?>
 <div class="modal fade" tabindex="-1" role="dialog" id="ConfirmDelete">
 	<div class="modal-dialog">
 		<div class="modal-content">

@@ -3,6 +3,7 @@ namespace Menu\Controller;
 
 use Pages\Controller\PageController;
 use Zend\View\Model\ViewModel;
+use Menu\Entity\Menu;
 
 class MenuManagerController extends PageController
 {
@@ -11,8 +12,7 @@ class MenuManagerController extends PageController
 	public function viewAction()
 	{
         $tableReport = $this->serviceLocator->get('TableReport');
-		
-		$limit=false;
+
 		$allow_sort=array('label', 'is_active');
 		$allow_filter=array('header', 'author_id');
 		
@@ -33,55 +33,68 @@ class MenuManagerController extends PageController
 	}
 	
 	public function addMenuAction()
-	{    	    
-		$permissionsTable = $this->serviceLocator->get('PermissionsTable');
-        $menu = new \Menu\Entity\Menu();
+	{
+        $this->registerReferer();
+        $menu = new Menu();
+        $menu->setPermissions(array());
         
         $user = $this->serviceLocator->get('User');
         $selectedRoles = $this->serviceLocator->get('RoleTable')->getAllowedRolesForUser($user->id);
-        
+
+        # получение разрешенных действий
+        $allowedActions = $this->getAllowedMenuActionList();
+        $allowedActionsKeys = array_keys($allowedActions);
         
         $form = $this->serviceLocator->get('Menu\Form\MenuForm');
         $form->setSelectedRoles($selectedRoles);
-        $form->init(null, $this->getAllowedMenuActionList());
+        $form->init(null, $allowedActions);
 		$form->bind($menu);
         
-        $message=false;
+        $message='';
 		$is_success = $this->params()->fromQuery('success', 0);
         
         $request = $this->getRequest();
         
         if ($request->isPost()) 
 		{
-            $postData = $request->getPost();
-						
-			$form->setData($postData);
-			
-			$menuModel = $this->serviceLocator->get('Menu\Model\MenuModel');
-			$routesTable = $this->serviceLocator->get('RoutesTable');
-				
-			$menuId = $menuModel->add($menu);
-			$routeId = $routesTable->addRoute(self::MENU_ROUTE_NAME, $menuId);
-			$menuModel->setRoute($routeId, $menuId);
-			
-			$permissionsService = $this->serviceLocator->get('PermissionsService');
-            $permissionsService->savePermission($routeId, $postData['permissions']);
+            try {
+                $postData = $request->getPost();
+                $form->setData($postData);
+
+                if (!$form->isValid()) throw new Exception('Некорректные данные');
+
+                $menuTable = $this->serviceLocator->get('Menu\Model\MenuTable');
+                $routesTable = $this->serviceLocator->get('RoutesTable');
+
+                $menuId = $menuTable->addMenu($menu);
+                $menu->route_id = $routesTable->addRoute(self::MENU_ROUTE_NAME, $menuId);
+                $menuTable->setRoute($menu->route_id, $menuId);
+
+                $permissionsService = $this->serviceLocator->get('PermissionsService');
+                //$permissionsService->savePermissions($routeId, $postData['permissions']);
+                $permissionsService->savePermissions($menu->route_id, $menu->getPermissions(), $allowedActionsKeys);
+
+                return $this->redirectToRefererOrDefaultRoute('menu-manager', array('action' => 'view'));
+
+            } catch (Exception $ex) {
+                $is_success = 0;
+                $message = $ex->getMessage();
+            }
         }
        
         $title = 'Добавление нового меню';
-		
-		$can_activeToggle = 1;
-		$can_delete = 0;
-        $back = $this->back(false);
-        
-		$params = array(
+
+        $back = $this->getReferer('menu-manager');
+
+        $params = array(
             'form' => $form, 
             'is_success'=>$is_success, 
             'message'=>$message, 
             'title'=>$title, 
-            'can_activeToggle'=>$can_activeToggle, 
-            'can_delete'=>$can_delete,
+            'allowedActions'=>$allowedActions,
             'back'=>$back,
+            'menu'=>$menu,
+            'tree'=>array()
         );
 		
 		$view = new ViewModel($params);
@@ -96,7 +109,7 @@ class MenuManagerController extends PageController
     */
     private function getAllowedMenuActionList()
     {
-        $menuController = $serviceManager->get('ControllerManager')->get('Menu\Controller\Menu');
+        $menuController = $this->serviceLocator->get('ControllerManager')->get('Menu\Controller\Menu');
         return $menuController->getAllowedActionList();
     }
     

@@ -160,11 +160,9 @@ class PageController extends AbstractActionController implements RefererAwareInt
 	
 	public function delAction()
 	{
-		
-        
         $page = $this->getPage();
 		if(!$page) throw new Exception('page not found');
-        
+
 		$pageModel = $this->serviceLocator->get('Pages\Model\PageModel');
         $pageModel->remove($page->id);
 		
@@ -201,8 +199,9 @@ class PageController extends AbstractActionController implements RefererAwareInt
     
     /**
     * Список разрешенных действий страницы
+    * $returnKeys флаг возвращать только ключи (действия)
     */
-    protected function getAllowedActionList()
+    protected function getAllowedActionList($returnKeys=false)
     {
         if(isset($this->allowedActionList)) return $this->allowedActionList;
         
@@ -225,7 +224,7 @@ class PageController extends AbstractActionController implements RefererAwareInt
             }, ARRAY_FILTER_USE_KEY);
         }
         
-        return $allowedActionsList;
+        return $returnKeys ? array_keys($allowedActionsList) : $allowedActionsList;
     }
 	
 	protected function back($is_redirect=true)

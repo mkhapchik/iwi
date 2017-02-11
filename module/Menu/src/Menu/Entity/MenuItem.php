@@ -93,5 +93,9 @@ class MenuItem implements \Application\TreeObjectInterface
     {
         return $this->children;
     }
+
+    public function hasChildren(){
+        return is_array($this->children) && count($this->children)>0;
+    }
 }
 	

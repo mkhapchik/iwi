@@ -24,6 +24,10 @@ class MenuItemsTable extends TableGateway
         
         return $items;
     }
+
+    public function delItems($menuId){
+        $this->delete(array('parent_menu_id'=>$menuId));
+    }
     
     public function addMenuItem(MenuItem $item)
 	{

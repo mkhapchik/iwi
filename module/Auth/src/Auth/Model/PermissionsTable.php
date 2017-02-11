@@ -113,6 +113,10 @@ class PermissionsTable extends TableGateway
         
         $this->deleteWith($delete);
     }
+
+    public function deletePermissionsForRoute($routeId){
+        $this->delete(array('routeId'=>$routeId));
+    }
 	
 	public function isAllowed($routeId, $roleIds, $userId, $action)
 	{

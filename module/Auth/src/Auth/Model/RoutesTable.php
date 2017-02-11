@@ -65,4 +65,8 @@ class RoutesTable extends AbstractTable
 		$routeId = (int)$routeId;
 		$this->update(array('is_active'=>0), array('id'=>$routeId));
 	}
+
+	public function delRoute($routeId){
+        $this->delete(array('id'=>$routeId));
+    }
 }

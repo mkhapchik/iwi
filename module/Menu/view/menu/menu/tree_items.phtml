@@ -1,0 +1,3 @@
+<ul class="connectedSortable">
+    <?php if(count($tree)>0) foreach($tree as $item) echo $this->partial('menu/menu/tree_item.phtml', array('item'=>$item, 'collection'=>$collection)); ?>
+</ul>
