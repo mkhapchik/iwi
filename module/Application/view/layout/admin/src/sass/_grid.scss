@@ -1,0 +1,55 @@
+html,
+body{
+ height: 100%;
+}
+
+#wrapper{
+  min-height: 100%;
+  height: auto;
+  position:relative;
+  overflow: hidden;
+  min-width:200px;
+}
+
+#empty{
+  float:none;
+  clear:both;
+  height:$footerHeight;
+}
+
+#footer{
+  height:$footerHeight;
+  margin-top:-$footerHeight;
+}
+
+#main{
+  height:100%;
+  display:table;
+  padding-top:15px;
+  padding-bottom:2000px;
+  margin-bottom:-2000px;
+
+}
+
+#main h1{
+  margin-top:10px;
+  margin-bottom:20px;
+}
+
+.glyphicon{
+  margin-right: 3px;
+}
+
+
+@media (max-width: $screen-xs-max) {
+   .nav-target{
+        display:none;
+   }
+}
+
+@media (min-width: $screen-sm-min){
+    .nav-target.collapse{
+       height:inherit !important;
+       display:inherit !important;
+    }
+}

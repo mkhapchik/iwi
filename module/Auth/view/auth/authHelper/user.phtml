@@ -1,16 +1,19 @@
-<ul class="nav navbar-nav ">
-	<li class="dropdown">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-			<span class="glyphicon glyphicon-user"></span>
-			<?=$user->name?>
-			<span class="caret"></span>
-		</a>
-		<ul class="dropdown-menu">
-			<li><a href="<?=$this->url('profile', array('action'=>'view'));?>">Профиль</a></li>
-			<li><a href="#">Messages(5)</a></li>
-			<li><a href="#">Something else here</a></li>
-			<li role="separator" class="divider"></li>
-			<li><a href="<?=$logout_url?>"><span class="glyphicon glyphicon-log-out"></span>Выход</a></li>
-		</ul>
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+	<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+	<span class="name"><?=$user->name?></span>
+	<span class="caret"></span>
+</a>
+<ul class="dropdown-menu">
+	<li><a href="<?=$this->url('profile', array('action'=>'view'));?>">Профиль</a></li>
+	<li>
+		<a href="#">Action</a>
 	</li>
+	<li>
+		<a href="#">Another action</a>
+	</li>
+	<li>
+		<a href="#">Something else here</a>
+	</li>
+	<li role="separator" class="divider"></li>
+	<li><a href="<?=$logout_url?>"><span class="glyphicon glyphicon-log-out"></span>Выход</a></li>
 </ul>

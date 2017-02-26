@@ -1,0 +1,16 @@
+form .form-navigation{
+    height: 50px;
+}
+
+form .form-navigation .buttons{
+    height:55px;
+    position:fixed;
+    bottom:0;
+    right:0;
+    z-index:1;
+    background:#eee;
+}
+
+form .form-navigation .buttons .form-panel{
+    padding: 10px 30px 5px 15px;
+}

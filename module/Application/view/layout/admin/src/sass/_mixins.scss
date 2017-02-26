@@ -1,0 +1,15 @@
+@import "_linear-gradient-mixin.scss";
+
+@mixin transition($transition) {
+	   transition:$transition;
+       -moz-transition:$transition;
+       -webkit-transition:$transition;
+       -o-transition:$transition;
+}
+
+@mixin border-radius($radius) {
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    -ms-border-radius: $radius;
+    border-radius: $radius;
+}
