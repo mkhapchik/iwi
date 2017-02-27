@@ -1,0 +1,63 @@
+/**
+* actions
+*/
+
+.action{
+
+}
+
+.action::before{
+  margin-right:4px;
+  content: "";
+}
+
+.action.view::before{
+  content:"";
+}
+
+.action.edit::before {
+  content: "✏";
+}
+
+.action.add::before {
+  content: "+";
+}
+
+.action.del::before {
+  content: "";
+}
+
+.action.activeToggle::before{
+  content: "";
+}
+
+.action.editUser::before{
+  content: "✏";
+}
+
+.action.addUser::before{
+  content: "+";
+}
+
+.action.deleteUser::before{
+  content: "";
+}
+
+.action.addRole::before{
+  content: "+";
+}
+
+.action.editRole::before{
+  content: "✏";
+}
+
+.action.delRole::before{
+  content: "";
+}
+
+.action.loginAsUser::before{
+  content: "";
+}
+.action.addMenu::before{
+  content: "+";
+}

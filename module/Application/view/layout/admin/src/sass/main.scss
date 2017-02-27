@@ -8,5 +8,82 @@
 @import '_alerts.scss';
 @import '_logo.scss';
 @import '_form.scss';
+@import '_tooltip.scss';
+@import '_permission.scss';
+@import '_message.scss';
+@import '_table.scss';
+@import '_margin.scss';
+@import '_padding.scss';
+@import '_actions.scss';
+@import '_tree.scss';
+
+
+
+.bg-primary ,
+.bg-success ,
+.bg-info ,
+.bg-warning,
+.bg-danger {
+  padding:15px;
+  margin-bottom:10px;
+}
+
+
+/***********************/
+
+
+
+
+.container-middle{
+  max-width:380px;
+}
+
+.loader{
+  width: 64px;
+  height: 64px;
+  background: url('/img/loader_64.gif') center center no-repeat;
+}
+
+.ajaxform .loader{
+  float:right;
+}
+
+/*table report*/
+.sortable{
+  border-bottom: 1px dashed #777;
+  color:#333;
+}
+
+.sortable .glyphicon-sort-by-alphabet,
+.sortable .glyphicon-sort-by-alphabet-alt,
+.sortable .glyphicon-sort-by-attributes,
+.sortable .glyphicon-sort-by-attributes-alt{
+  display:none;
+}
+
+.sortable.asc .glyphicon-sort-by-alphabet,
+.sortable.desc .glyphicon-sort-by-alphabet-alt,
+.sortable.asc .glyphicon-sort-by-attributes,
+.sortable.desc .glyphicon-sort-by-attributes-alt{
+  display:inherit;
+}
+
+pre, .xdebug-error{
+  margin:2% 20%;
+}
+
+.hover_show_icon .glyphicon{
+  display:none;
+}
+
+.hover_show_icon:hover .glyphicon{
+  display:inherit;
+}
+
+
+
+
+
+
 
 
