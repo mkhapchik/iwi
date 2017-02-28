@@ -52,7 +52,14 @@
 .sortable{
   border-bottom: 1px dashed #777;
   color:#333;
+  text-decoration: none;
 }
+
+.sortable:hover,
+.sortable:active{
+  text-decoration: none;
+}
+
 
 .sortable .glyphicon-sort-by-alphabet,
 .sortable .glyphicon-sort-by-alphabet-alt,

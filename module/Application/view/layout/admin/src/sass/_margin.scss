@@ -40,7 +40,7 @@
 .margin-bottom-100 {
   margin-bottom: 100px;
 }
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   .sm-margin-bottom-10 {
     margin-bottom: 10px;
   }
@@ -60,7 +60,7 @@
     margin-bottom: 60px;
   }
 }
-@media (max-width: 992px) {
+@media (max-width: $screen-md-min) {
   .md-margin-bottom-10 {
     margin-bottom: 10px;
   }
