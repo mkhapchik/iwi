@@ -1,0 +1,77 @@
+#logo{
+    position:absolute;
+    padding:5px;
+    left:1%;
+    top:10px;
+    text-align:center;
+    width:99%;
+}
+
+#logo img{
+    width:50%;
+    min-width:90px;
+    max-height:115px;
+    max-width:115px;
+    float:left;
+    padding:0;
+
+}
+
+#logo span{
+    display:block;
+    padding:0;
+    width:50%;
+    line-height:1.3em;
+    text-align:center;
+    font-size:1.4em;
+    height:auto;
+    margin-top:8.5%;
+}
+
+@media (max-width: $screen-md-max){
+    #logo{
+        left:0;
+        width:100%;
+    }
+
+    #logo span{
+        display:none;
+    }
+
+    #logo img{
+        float:none;
+        width:80%;
+        min-width:auto;
+    }
+}
+
+@media (max-width: $screen-xs-max){
+    #logo{
+        position:static;
+        height:50px;
+        float:left;
+        width:auto;
+    }
+
+    #logo img{
+        height:100%;
+        width:auto;
+        float:left;
+    }
+
+    #logo span{
+        display:block;
+        width:auto;
+        line-height:40px;
+        padding:0 10px;
+        font-size:1em;
+        margin-top: 0;
+    }
+}
+
+@media (max-width: $screen-xxs-max){
+    #logo span{
+        display:none;
+    }
+}
+

@@ -1,0 +1,76 @@
+@import "../../_variables.scss";
+@import "../../mixins.scss";
+
+$sidebar-background: #191919;
+$main-background: #fff;
+
+#wrapper{
+    background: $sidebar-background;
+}
+
+#main{
+    background: $main-background;
+}
+
+#alerts{
+    background: $main-background;
+}
+
+/**
+* navbar
+*/
+#navbar .navbar-body{
+    @include linear-gradient(to bottom, #ffffff 0%, #F6F6F6 47%, #ededed 100%);
+}
+
+#navbar .navbar-header .icon-bar{
+    background: #191919;
+}
+
+@media (max-width: $screen-xs-max) {
+    #navbar .navbar-header{
+        @include linear-gradient(to bottom, #ffffff 0%, #F6F6F6 47%, #ededed 100%);
+    }
+
+    #navbar .navbar-body{
+        background:$sidebar-background;
+    }
+
+}
+
+#navbar .count{
+    color:#fff;
+    background:#555;
+}
+
+#navbar .navbar-body .navbar-nav a{
+    color:#555;
+}
+
+
+/**
+* sidebar
+*/
+#sidebar .nav-sidebar{
+    border-color:#333;
+}
+
+#sidebar .nav-sidebar a{
+    color:#e0efff;
+}
+
+#sidebar .nav-sidebar a:hover,
+#sidebar .nav-sidebar a:focus,
+#sidebar .nav-sidebar a.active
+{
+    color:#e0efff;
+    background: #0a0a0a;
+}
+
+#sidebar-footer{
+    background:$sidebar-background;
+}
+
+#footer .footer-content{
+    background: $main-background;
+}

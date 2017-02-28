@@ -1,0 +1,38 @@
+/*table*/
+.table > tbody > tr.inactive > td,
+.table > tbody > tr.inactive > th,
+.table > tbody > tr > td.inactive,
+.table > tbody > tr > th.inactive,
+.table > tfoot > tr.inactive > td,
+.table > tfoot > tr.inactive > th,
+.table > tfoot > tr > td.inactive,
+.table > tfoot > tr > th.inactive,
+.table > thead > tr.inactive > td,
+.table > thead > tr.inactive > th,
+.table > thead > tr > td.inactive,
+.table > thead > tr > th.inactive{
+  color:#9299a2;
+}
+
+.table > tbody > tr.inactive > td *,
+.table > tbody > tr.inactive > th *,
+.table > tbody > tr > td.inactive *,
+.table > tbody > tr > th.inactive *,
+.table > tfoot > tr.inactive > td *,
+.table > tfoot > tr.inactive > th *,
+.table > tfoot > tr > td.inactive *,
+.table > tfoot > tr > th.inactive *,
+.table > thead > tr.inactive > td *,
+.table > thead > tr.inactive > th *,
+.table > thead > tr > td.inactive *,
+.table > thead > tr > th.inactive *{
+  /*background-color: #d9edf7;*/
+  color:#9299a2;
+}
+
+
+.table .controls a,
+.table .controls a:hover,
+.table .controls a:active{
+  text-decoration: none;
+}

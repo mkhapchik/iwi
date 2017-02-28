@@ -1,0 +1,20 @@
+/*
+.permission .form-group::nth-child(2n+1){
+	background:#f00;
+}
+*/
+.permission{
+
+  float:left;
+  clear:both;
+  width:98%;
+  padding: 0 1%;
+}
+
+.permission:nth-child(2n+1){
+  background:#eee;
+}
+
+.permission .actions{
+  padding:7px 0;
+}
