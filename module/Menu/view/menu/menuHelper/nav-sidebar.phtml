@@ -3,8 +3,9 @@ if(count($this->container)>0):?>
 <ul class="nav nav-sidebar">
 <?php foreach ($this->container as $page): ?>
 	
-	<li <?=$page->isActive() ? "class='active'":""?>>
-		<a href="<?=$page->href?>" target="<?=$page->blank ? '_blank' : '_self'?>">
+	<li>
+		<a href="<?=$page->href?>" target="<?=$page->blank ? '_blank' : '_self'?>" <?=$page->isActive() ? "class='active'":""?>>
+			<span class="glyphicon <?=$page->icon_class; ?>"></span>
 			<?=$page->label?>
 		</a>
 		

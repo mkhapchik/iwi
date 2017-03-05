@@ -158,6 +158,7 @@ class Menu implements ServiceLocatorAwareInterface
 		$pages = array();
 		$pages['label'] = $item['label'];
 		$pages['blank'] = $item['blank'];
+        $pages['icon_class'] = $item['icon_class'];
 
 		if(!empty($item['uri']) || empty($item['route_name']))
 		{

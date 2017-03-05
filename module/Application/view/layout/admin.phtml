@@ -178,6 +178,9 @@
 				</a>
 			</li>
 		</ul>
+		<?php echo $this->MenuHelper('test')->setPartial('menu/menuHelper/nav-sidebar')->render(); ?>
+		<?php echo $this->MenuHelper('capital')->setPartial('menu/menuHelper/nav-sidebar')->render(); ?>
+		<?php echo $this->MenuHelper('admin')->setPartial('menu/menuHelper/nav-sidebar')->render(); ?>
 	</div>
 
 	<div id="sidebar-footer" class="col-md-2 col-sm-1 col-xs-12 nav-target">
