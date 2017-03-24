@@ -13,7 +13,7 @@
 
 return array(
     'logger'=>array(
-		'is_log'=>1,
+		'is_log'=>0,
 		'sql'=>1
 	),
 	'db_default' => array(

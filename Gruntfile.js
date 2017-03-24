@@ -45,7 +45,7 @@ module.exports = function ( grunt ) {
         uglify: {
 
             libs: {
-             src:  ['module/Application/view/layout/admin/src/js/libs/jquery-3.1.1.min.js', 'module/Application/view/layout/admin/src/js/libs/angular.js', 'module/Application/view/layout/admin/src/js/libs/bootstrap.js'],
+             src:  ['module/Application/view/layout/admin/src/js/libs/jquery/*.js', 'module/Application/view/layout/admin/src/js/libs/*.js'],
              dest: 'public/js/libs.min.js'
             },
 

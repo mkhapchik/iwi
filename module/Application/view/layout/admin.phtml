@@ -15,13 +15,16 @@
 	<link href="<?=$this->basePath()?>/css/admin/main.min.css" rel="stylesheet">
 	<link href="<?=$this->basePath()?>/css/admin/theme.min.css" rel="stylesheet">
 
-
+    <script src="<?=$this->basePath()?>/js/external/jquery-3.1.1.min.js"></script>
+    <script src="<?=$this->basePath()?>/js/external/angular.js"></script>
+    <script src="<?=$this->basePath()?>/js/external/bootstrap.min.js"></script>
 </head>
 
 <body>
 <div id="wrapper">
 	<div id="alerts">
-		<div class="alert alert-danger alert-dismissible fade in" role="alert">
+		<!--
+        <div class="alert alert-danger alert-dismissible fade in" role="alert">
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true">×</span>
 			</button>
@@ -37,6 +40,7 @@
 			<strong>Holy guacamole!</strong>
 			Best check yo self, you're not looking too good.
 		</div>
+		-->
 	</div>
 	<?=$this->UserHelper()->loginAsUser('users/user-helper/login_as_user');?>
 	<div id="navbar" class="col-sm-12">
@@ -99,85 +103,6 @@
 	</div>
 
 	<div id="sidebar" class="col-md-2 col-sm-1 col-xs-12 nav-target">
-		<ul class="nav nav-sidebar">
-			<li class="active">
-				<a href="#">
-					<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-					<span>Overview</span>
-					<span class="sr-only">(current)</span>
-				</a>
-			</li>
-			<li>
-				<a href="#">
-					<span class="glyphicon glyphicon-user"></span>
-					<span>Reports</span>
-				</a>
-			</li>
-			<li>
-				<a href="#">
-					<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-					<span>Analytics</span>
-				</a>
-			</li>
-			<li>
-				<a href="#">
-					<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-					<span>Export</span>
-				</a>
-			</li>
-		</ul>
-		<ul class="nav nav-sidebar">
-			<li>
-				<a href="">
-					<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-					<span>Nav item</span>
-				</a>
-			</li>
-			<li>
-				<a href="">
-					<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-					<span>Nav item again</span>
-				</a>
-			</li>
-			<li>
-				<a href="">
-					<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-					<span>One more nav</span>
-				</a>
-			</li>
-			<li>
-				<a href="">
-					<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-					<span>Another nav item</span>
-				</a>
-			</li>
-			<li>
-				<a href="">
-					<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-					<span>More navigation</span>
-				</a>
-			</li>
-		</ul>
-		<ul class="nav nav-sidebar">
-			<li>
-				<a href="">
-					<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-					<span>Nav item again</span>
-				</a>
-			</li>
-			<li>
-				<a href="">
-					<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-					<span>One more nav</span>
-				</a>
-			</li>
-			<li>
-				<a href="">
-					<span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-					<span>Another nav item</span>
-				</a>
-			</li>
-		</ul>
 		<?php echo $this->MenuHelper('test')->setPartial('menu/menuHelper/nav-sidebar')->render(); ?>
 		<?php echo $this->MenuHelper('capital')->setPartial('menu/menuHelper/nav-sidebar')->render(); ?>
 		<?php echo $this->MenuHelper('admin')->setPartial('menu/menuHelper/nav-sidebar')->render(); ?>
@@ -190,12 +115,6 @@
 
 	<div id="main" class="col-md-10 col-sm-11 col-xs-12">
 		<?=$this->content; ?>
-		<div ng-app="">
-
-			<p>Name: <input type="text" ng-model="name"></p>
-			<p>You wrote: {{ name }}</p>
-
-		</div>
 	</div>
 
 	<div id="empty" class=""></div>
