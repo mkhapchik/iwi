@@ -160,7 +160,11 @@ class Module
 			{
 				$viewModel = $e->getViewModel();
 				$viewModel->setTemplate($route->layout);
-			}
+			}else{
+                // for testing template
+                $viewModel = $e->getViewModel();
+                $viewModel->setTemplate('layout/admin');
+            }
 		}
 		catch(\Exception $ex)
 		{

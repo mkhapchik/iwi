@@ -36,7 +36,8 @@ class PageForm extends Form implements ServiceLocatorAwareInterface
 	public function init($routeId=false, $actionList=array())
 	{
 		$this->routeId = $routeId;
-		
+
+        $this->setAttribute('action','');
 		$this->setAttribute('method', 'post');
 		
 		$this->addFields();

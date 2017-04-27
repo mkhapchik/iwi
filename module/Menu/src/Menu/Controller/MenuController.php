@@ -224,7 +224,7 @@ class MenuController extends PageController
 
         $this->layout()->setVariable('title', $title);
 
-        $allowedActions = $this->getAllowedActionList(true);
+        $allowedActions = $itemId ? $this->getAllowedActionList(true) : array();
 
         $params = array(
             'title' => $title,

@@ -11,6 +11,7 @@ class MenuItemForm extends Form
 	public function __construct($name = 'menu_item_form')
     {
         parent::__construct($name);
+        $this->setAttribute('action','');
         $this->setAttribute('enctype','multipart/form-data');
 		$this->pages = array();
 		
