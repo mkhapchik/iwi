@@ -12,6 +12,11 @@ trait RefererRedirect
     private $sessionContainer;
 
     /**
+     * @var ServiceLocatorInterface
+     */
+    protected $serviceLocator;
+
+    /**
      * @param Session\Container $sessionContainer
      */
     public function setSessionContainer(Session\Container $sessionContainer)
@@ -29,10 +34,10 @@ trait RefererRedirect
      */
     protected function registerReferer()
     {
-        if (!$this->sessionContainer->offsetExists('referer')) {
+        //if (!$this->sessionContainer->offsetExists('referer')) {
             $referer = $this->getRequest()->getHeader('Referer');
             if($referer) $this->sessionContainer->offsetSet('referer', $referer->getUri());
-        }
+        //}
     }
 
     protected function getReferer($defaultRoute=false, $defaultParams=array())

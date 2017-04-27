@@ -4,6 +4,7 @@ namespace Menu\Controller;
 use Pages\Controller\PageController;
 use Zend\View\Model\ViewModel;
 use Menu\Entity\Menu;
+use \Exception;
 
 class MenuManagerController extends PageController
 {
@@ -34,7 +35,6 @@ class MenuManagerController extends PageController
 	
 	public function addMenuAction()
 	{
-        $this->registerReferer();
         $menu = new Menu();
         $menu->setPermissions(array());
         
@@ -80,11 +80,13 @@ class MenuManagerController extends PageController
                 $is_success = 0;
                 $message = $ex->getMessage();
             }
+        }else{
+            $this->registerReferer();
         }
        
         $title = 'Добавление нового меню';
 
-        $back = $this->getReferer('menu-manager');
+        $referer = $this->getReferer('menu-manager');
 
         $params = array(
             'form' => $form, 
@@ -92,7 +94,7 @@ class MenuManagerController extends PageController
             'message'=>$message, 
             'title'=>$title, 
             'allowedActions'=>$allowedActions,
-            'back'=>$back,
+            'referer'=>$referer,
             'menu'=>$menu,
             'tree'=>array()
         );

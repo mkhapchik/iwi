@@ -16,7 +16,7 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-		$this->layout()->setVariable('title', 'Мой капитал');
+		$this->layout()->setVariable('title', 'IWI: Главная страница');
 		
 		$view = new ViewModel(array(
             'message' => 'Hello <br> world',

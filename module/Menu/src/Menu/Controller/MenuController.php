@@ -83,7 +83,7 @@ class MenuController extends PageController
                 $items = $menu->getItems();
                 $this->saveItemsPosition($items);
 
-                return $this->redirectToRefererOrDefaultRoute('pages-manager', array('action' => 'view'));
+                return $this->redirectToRefererOrDefaultRoute('menu-manager', array('action' => 'view'));
 
             } catch (Exception $ex) {
                 $is_success = 0;
@@ -93,7 +93,7 @@ class MenuController extends PageController
 
         $title = "Редактирование меню $menu->label";
 
-        $referer = $this->getReferer('pages-manager');
+        $referer = $this->getReferer('menu-manager');
 
         $params = array(
             'id' => $id,

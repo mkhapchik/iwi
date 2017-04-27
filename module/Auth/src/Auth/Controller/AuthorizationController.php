@@ -14,7 +14,7 @@ class AuthorizationController extends AbstractActionController
 		
 	public function checkTimeoutAction()
 	{
-		try
+        try
 		{
 			$storageService = $this->getServiceLocator()->get('\Auth\Service\StorageService');
 			$authConfig = $this->getServiceLocator()->get('authConfig');
@@ -29,7 +29,7 @@ class AuthorizationController extends AbstractActionController
 		}
 		catch(Exception $ex)
 		{
-			$view = $this->forward()->dispatch('Auth\Controller\Authentication', array(
+            $view = $this->forward()->dispatch('Auth\Controller\Authentication', array(
 				'action' => 'login',
 				'is_success'=>0,
 				'codeAccess'=>$ex->getMessage(),
@@ -37,12 +37,10 @@ class AuthorizationController extends AbstractActionController
 			));
 			
 			$view->setVariable('title', '');
-			
 			$viewDialog = new ViewModel(array('title'=>'Аутентификация'));
 			$viewDialog->setTerminal(true);
 			$viewDialog->addChild($view, 'view');
-			
-			
+
 			return $viewDialog;
 		}
 	}

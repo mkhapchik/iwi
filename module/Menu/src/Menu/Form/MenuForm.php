@@ -87,7 +87,7 @@ class MenuForm extends \Pages\Form\PageForm
 			'continue_if_empty' => true
 		)));
         
-		/*
+
 		$inputFilter->add($factory->createInput(array(
 			'name'     => 'name',
 			'required' => true,
@@ -106,7 +106,26 @@ class MenuForm extends \Pages\Form\PageForm
 				),		
 			),
 		)));
-		*/
+
+        $inputFilter->add($factory->createInput(array(
+            'name'     => 'label',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+            ),
+            'validators' => array(
+                array(
+                    'name' =>'NotEmpty',
+                    'options' => array(
+                        'messages' => array(
+                            NotEmpty::IS_EMPTY => 'Это поле обязательно для заполнения'
+                        ),
+                    ),
+                ),
+            ),
+        )));
+
 
 		return $inputFilter;
 	}
