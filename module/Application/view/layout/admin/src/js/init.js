@@ -25,9 +25,9 @@ $(document).ready(function(){
         currency_eval($(this));
     });
 
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    });
+    //$(function () {
+    //    $('[data-toggle="tooltip"]').tooltip();
+    //});
 
     $('body').on('click', '.password-generator', function(){
         var newPwd = generatePass(10);
@@ -47,6 +47,11 @@ $(document).ready(function(){
     $('body').on('click', '.submitModal', function(){
         $(this).closest('.modal-content').find('.modal-body form').submit();
     });
+
+    $('body').on('click', '.tab-select', function(){
+
+    });
+
 
     ajaxFormInit($('.ajaxform'));
 

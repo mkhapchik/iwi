@@ -46,6 +46,7 @@ class MenuItemInputFilter extends InputFilter
                             \Zend\Validator\NotEmpty::IS_EMPTY => 'Это поле обязательно для заполнения'
                         ),
                     ),
+                    'break_chain_on_failure' => true,
                 ),
 
             )
