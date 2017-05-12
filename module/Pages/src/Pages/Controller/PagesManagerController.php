@@ -1,15 +1,15 @@
 <?php
 namespace Pages\Controller;
 
-//use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Pages\Form\PageForm;
 use Pages\Form\PageFilter;
 use Pages\Controller\PageController;
+use Exception;
 
 class PagesManagerController extends PageController
 {
-	const PAGE_ROUTE_NAME = 'pages';
+	const PAGE_ROUTE_NAME = 'pages-manager';
 
     public function addAction()
 	{
@@ -17,19 +17,17 @@ class PagesManagerController extends PageController
          
         # получение страницы
         $page = new \Pages\Entity\Page();
-                        
+        $page->setPermissions(array());
+
         $roleTable = $this->serviceLocator->get('RoleTable');
         $user = $this->serviceLocator->get('User');
 
         # получение разрешенных действий
-        $allowedActionsList = $this->getAllowedActionList();
+        $allowedActionsList = $this->getPageAllowedActionList();
         $allowedActionsKeys = array_keys($allowedActionsList);
 		
 
         $roles = $roleTable->getAllowedRolesForUser($user->id);
-
-        $form = $this->serviceLocator->get('Pages\Form\PageForm');
-        $form->setSelectedRoles($roles);
 
         # инициализация формы
         $form = $this->serviceLocator->get('Pages\Form\PageForm');
@@ -53,7 +51,7 @@ class PagesManagerController extends PageController
                 $pageModel = $this->serviceLocator->get('Pages\Model\PageModel');
                 $routesTable = $this->serviceLocator->get('RoutesTable');
                 $page->id = $pageModel->add($page);
-                $page->route_id = $routesTable->addRoute(self::PAGE_ROUTE_NAME, $page->id);
+                $page->route_id = $routesTable->addRoute(parent::getRouteName(), $page->id);
                 $pageModel->setRoute($page->route_id, $page->id);
 
                 # изменение активности 
@@ -190,5 +188,14 @@ class PagesManagerController extends PageController
 
 		return $actions;
 	}
+
+    protected function getPageAllowedActionList()
+    {
+        return $this->getAllowedActionListByList(parent::getActionList());
+    }
+
+    protected function getRouteName(){
+        return self::PAGE_ROUTE_NAME;
+    }
     
 }

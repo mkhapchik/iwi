@@ -1,21 +1,5 @@
 <?php
 return array(
-	
-	'navigation'=>array(
-		'admin'=>array(
-			array(
-				'label'=>'Пользователи',
-				'route'=>'users-manager',
-				'params'=>array()
-			),
-			array(
-				'label'=>'Роли',
-				'route'=>'roles-manager',
-				'params'=>array()
-			),
-		)
-	),
-		
 	'controllers' => array(
         'invokables' => array(
 			'Users\Controller\UserProfile'=>'Users\Controller\UserProfileController',

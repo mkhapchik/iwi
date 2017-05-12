@@ -21,7 +21,8 @@ class PageFilter extends Form
 	
 	public function init()
 	{
-		$this->setAttribute('method', 'get');
+        $this->setAttribute('action','');
+        $this->setAttribute('method', 'get');
 		
 		$filter = new \Zend\Form\Fieldset('filter');
 		$filter->add(array(

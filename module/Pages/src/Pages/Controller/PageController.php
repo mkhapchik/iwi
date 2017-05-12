@@ -205,12 +205,25 @@ class PageController extends AbstractActionController implements RefererAwareInt
     {
         if(isset($this->allowedActionList)) return $this->allowedActionList;
         
+
+        
+        $pageActionsList = $this->getActionList();
+
+        $allowedActionsList = $this->getAllowedActionListByList($pageActionsList);
+        
+        return $returnKeys ? array_keys($allowedActionsList) : $allowedActionsList;
+    }
+
+    /**
+     * Возвращает список разрешенных действий по запрошенному списку
+     * @param $pageActionsList
+     * @return array
+     */
+    protected function getAllowedActionListByList($pageActionsList){
         $user = $this->serviceLocator->get('User');
         $route = $this->serviceLocator->get('Route');
         $permissionsTable = $this->serviceLocator->get('PermissionsTable');
-        
-        $pageActionsList = $this->getActionList();
-        
+
         if($user->isSuper())
         {
             $allowedActionsList = $pageActionsList;
@@ -218,13 +231,13 @@ class PageController extends AbstractActionController implements RefererAwareInt
         else
         {
             $allowedActionsKeys = $permissionsTable->getAllowedActions($route->id, $user->id, array_keys($pageActionsList));
-            
+
             $allowedActionsList = array_filter($pageActionsList, function($key) use($allowedActionsKeys){
-                return in_array($key, $allowedActionsKeys);    
+                return in_array($key, $allowedActionsKeys);
             }, ARRAY_FILTER_USE_KEY);
         }
-        
-        return $returnKeys ? array_keys($allowedActionsList) : $allowedActionsList;
+
+        return $allowedActionsList;
     }
 	
 	protected function back($is_redirect=true)
@@ -253,10 +266,14 @@ class PageController extends AbstractActionController implements RefererAwareInt
 		$route = $this->serviceLocator->get('Route');
         $pageModel = $this->serviceLocator->get('Pages\Model\PageModel');
 				
-		if($pageId && $route->route_name==self::PAGE_ROUTE_NAME) $page = $pageModel->getPageById($pageId);
+		if($pageId && $route->route_name==$this->getRouteName()) $page = $pageModel->getPageById($pageId);
 		else $page = $pageModel->getPageByRouteId($route->id);
         
         return $page;
+    }
+
+    protected function getRouteName(){
+        return self::PAGE_ROUTE_NAME;
     }
 	
 }
