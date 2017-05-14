@@ -228,12 +228,19 @@ class UserTable extends AbstractTable
 	
 	private function filterSaveData($data)
 	{
-		$allowed_field = array('login','pwd','email','name','token_pwd', 'parent_user_id');
-		
-		$result = array_filter($data, function($k) use($allowed_field) {
+        $allowed_field = array('login','pwd','email','name','token_pwd', 'parent_user_id');
+
+        $result = array();
+        foreach($allowed_field as $field){
+            if(array_key_exists($field, $data)){
+                $result[$field] = $data[$field];
+            }
+        }
+		/* >= PHP 5.6
+        $result = array_filter($data, function($k) use($allowed_field) {
 			return in_array($k, $allowed_field);
 		}, ARRAY_FILTER_USE_KEY);
-		
+		*/
 		return $result;
 	}
 	

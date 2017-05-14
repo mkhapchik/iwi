@@ -48,7 +48,8 @@ class UserForm extends Form implements ServiceLocatorAwareInterface
 	public function init($userId=false)
 	{
 		$this->userId = $userId;
-		$this->setAttribute('method', 'post');
+        $this->setAttribute('action', '');
+        $this->setAttribute('method', 'post');
 		
 		$this->add(array(
             'name' => 'name',
@@ -82,7 +83,8 @@ class UserForm extends Form implements ServiceLocatorAwareInterface
             'name' => 'temporary_block',
 			'attributes'=>array(
 				'type'  => 'text',
-				'class'=>'form-control date_hm'
+				'class'=>'form-control date_hm',
+                'id'=>'temporary_block'
 			),
 			'options' => array(
                 'label' => 'Закрыть доступ на время',

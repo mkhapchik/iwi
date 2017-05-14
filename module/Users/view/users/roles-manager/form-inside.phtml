@@ -1,0 +1,21 @@
+
+<?php
+    echo $this->message($message, $is_success);
+    echo $this->formElement($form->get('id'));
+    echo $this->formElement($form->get('form_name'));
+
+    echo $this->formGroup()
+        ->setLabelAttributes(array('class'=>'control-label'))
+        ->setInputGroupAttributes(array())
+        ->render($form->get('label'));
+    echo $this->formGroup()->setLabelAttributes(array('class'=>'control-label'))
+        ->setInputGroupAttributes(array())
+        ->render($form->get('description'));
+    echo $this->formGroupCheckbox($form->get('is_guest'));
+    echo $this->formGroupCheckbox($form->get('is_registered'));
+?>
+<div class="clearfix visible-lg-block"></div>
+
+<?php
+echo $this->partial('users/users-manager/roles.phtml', array('roles'=>$form->get('roles'), 'select_roles'=>$form->get('select_roles')));
+?>

@@ -13,4 +13,5 @@
 			<button type="button" class="btn btn-link role_cancel" data-toggle="tooltip" data-placement="auto right" title="Отменить роль"><span class="glyphicon glyphicon-remove"></span></button> 
 		</span> 
 	</div>
+	<?php echo $this->formHidden($collection->get('label')->setAttribute('class', 'role_label')); ?>
 </div>

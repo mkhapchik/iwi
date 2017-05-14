@@ -23,16 +23,29 @@ module.exports = function ( grunt ) {
                 }
             }
         },
-
+    /*
         cssmin: {
             options: {
-                keepSpecialComments: 0
+                keepSpecialComments: 0,
             },
             libs: {
-                src: 'module/Application/view/layout/admin/src/css/libs/*.css',
+                src: ['module/Application/view/layout/admin/src/css/libs/*.css'],
                 dest: 'public/css/admin/libs.min.css'
             }
 
+        },
+        */
+        cssmin: {
+            options: {
+                mergeIntoShorthands: false,
+                roundingPrecision: -1,
+
+            },
+            target: {
+                files: {
+                    'public/css/admin/libs.min.css': ['module/Application/view/layout/admin/src/css/libs/bootstrap.css', 'module/Application/view/layout/admin/src/css/libs/datetimepicker.css']
+                }
+            }
         },
         /*
         concat: {
@@ -83,7 +96,7 @@ module.exports = function ( grunt ) {
     // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks( 'grunt-contrib-uglify' );
     grunt.loadNpmTasks( 'grunt-sass' );
-    grunt.loadNpmTasks( 'grunt-css' );
+    grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-concat');
 

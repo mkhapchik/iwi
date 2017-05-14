@@ -15,7 +15,7 @@ class RolesManagerController extends PageController
 		$allow_sort=array();
 		$allow_filter=array('label');
 		
-		$tableReport->init(false, $allow_sort, $allow_filter);
+		$tableReport->init($limit, $allow_sort, $allow_filter);
 		
 		$sort = $tableReport->getSort();
 		$filter = $tableReport->getFilter();
@@ -50,6 +50,7 @@ class RolesManagerController extends PageController
 				
 		$title = "Добавление новой роли пользователя";
 		$params['title'] = $title;
+        $params['can_delete'] = false;
 		
 		return $this->setFormView($params, $result);
 	}
@@ -70,7 +71,7 @@ class RolesManagerController extends PageController
 		$role = $params['role'];
 		$title = "Редактирование роли '{$role->label}'";
 		$params['title'] = $title;
-		
+        $params['can_delete'] = false;
 		return $this->setFormView($params, $result);
 	}
 	
@@ -86,10 +87,15 @@ class RolesManagerController extends PageController
 		}
 		
 		$view = new ViewModel($params);
-		$view->setTemplate('users/roles-manager/form');
-		
-		if($is_xmlhttprequest) $view->setTerminal(true);
-		else $this->layout()->setVariable('title', $params['title']);
+
+		if($is_xmlhttprequest) {
+            $view->setTemplate('users/roles-manager/role-dialog');
+            $view->setTerminal(true);
+        }
+		else {
+            $view->setTemplate('users/roles-manager/form');
+            $this->layout()->setVariable('title', $params['title']);
+        }
 		
 		return $view;
 	}
@@ -138,12 +144,12 @@ class RolesManagerController extends PageController
 		{
 			$role = $roleTable->getRole($id);
             
-            
+
             $setAllowedRolesResultSet = $roleTable->getSetAllowedRolesForRole($id, $user->id);
-            
+
             $setAllowedRoles =array();
             foreach($setAllowedRolesResultSet as $roles) $setAllowedRoles[]=$roles;
-            
+
             $role->setAllowedRoles($setAllowedRoles);
 
             //$form->setData(array('roles'=>$setAllowedRoles));

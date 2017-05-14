@@ -26,7 +26,7 @@ class UsersManagerController extends PageController
 		$allow_sort=array();
 		$allow_filter=array();
 		
-		$tableReport->init(false, $allow_sort, $allow_filter);
+		$tableReport->init($limit, $allow_sort, $allow_filter);
 		
 		$sort = $tableReport->getSort();
 		$filter = $tableReport->getFilter();
@@ -51,12 +51,8 @@ class UsersManagerController extends PageController
         $params['userAuthId'] = $userAuthId;
 				
 		$this->layout()->setVariable('title', "Управление пользователями");
-		//$this->layout('application/layout/admin');
-		//return new ViewModel($params);
-		
-		$view = new ViewModel($params);
-        
-        return $view;
+
+        return new ViewModel($params);
 	}
 	
 	public function addUserAction()
@@ -103,8 +99,6 @@ class UsersManagerController extends PageController
 	
 	private function process($id, &$result)
 	{
-		$this->registerReferer();
-        
         $result = false;
 		$userTable = $this->serviceLocator->get('UserTable');
 		$roleTable = $this->serviceLocator->get('RoleTable');
@@ -159,8 +153,6 @@ class UsersManagerController extends PageController
 				
 				if($id)
 				{
-					
-					
 					if($edit_user->isSuper() && !$auth_user->isSuper())
 					{
 						throw new Exception("Доступ запрещен!");
@@ -211,6 +203,7 @@ class UsersManagerController extends PageController
 					
 					$rolesOld = array();
 					$rolesNew = array();
+
 					if(isset($default_data['roles']) && count($default_data['roles'])>0)
 					{
 						foreach($default_data['roles'] as $role) $rolesOld[]=$role['id'];
@@ -247,6 +240,8 @@ class UsersManagerController extends PageController
 				$is_success = 0;
 				$message = $ex->getMessage();
 			}
+        }else{
+            $this->registerReferer();
         }
 		
 		if(empty($form->get('temporary_block')->getValue())) 

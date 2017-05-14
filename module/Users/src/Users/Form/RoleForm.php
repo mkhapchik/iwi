@@ -46,7 +46,8 @@ class RoleForm extends Form implements ServiceLocatorAwareInterface
 	
 	public function init()
 	{
-		$this->setAttribute('method', 'post');
+        $this->setAttribute('action', '');
+        $this->setAttribute('method', 'post');
          
 		$this->add(array(
             'name' => 'id',

@@ -19,3 +19,16 @@ form .help-block{
     padding-right: 15px;
     text-align: right;
 }
+
+.form-group-fixed{
+    position: fixed;
+    bottom:0;
+    right: 0;
+    z-index: 1;
+    height: $footerHeight;
+    background: rgba(255,255,255,0.8);
+}
+
+.form-group-fixed > div{
+    padding-top:4px;
+}

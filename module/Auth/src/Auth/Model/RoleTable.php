@@ -72,16 +72,17 @@ class RoleTable extends TableGateway
 	/**
 	* Получение объекта выборки разрешенных ролей пользователя 
 	* @param $userId - идентификатор пользователя
+    * @param $permRolesColumns - массив колонок для permissions_roles
 	* @return SELECT $select - объект выборки разрешенных ролей пользователя
 	*/
-    public function createSelectAllowedRolesByUserId($userId)
+    public function createSelectAllowedRolesByUserId($userId, $permRolesColumns=array())
     {
         $userId = (int)$userId;
         
         $select = new Select();
         $select->columns(array('id', 'label', 'is_guest', 'is_registered', 'description'));
         $select->from(array('ur' => $this->table));
-        $select->join(array('pr' => 'permissions_roles'), 'ur.id = pr.role_id', array(), Select::JOIN_LEFT);
+        $select->join(array('pr' => 'permissions_roles'), 'ur.id = pr.role_id', $permRolesColumns, Select::JOIN_LEFT);
         
         $select_map = new Select();
         $select_map->columns(array('role_id'));
@@ -199,7 +200,7 @@ class RoleTable extends TableGateway
     */
     public function getSetAllowedRolesForUser($userId, $authUserId)
     {
-        $select = $this->createSelectAllowedRolesByUserId($authUserId, array('id', 'label', 'is_guest', 'is_registered'));
+        $select = $this->createSelectAllowedRolesByUserId($authUserId);
         
         $select_map = new Select();
         $select_map->columns(array('role_id'));
@@ -236,17 +237,25 @@ class RoleTable extends TableGateway
 
         return $this->createGuide($resultSet);
     }
-    
-    
+
+    /**
+     * Получение списка ролей разрешенных для конкретной роли
+     * @param $roleId
+     * @param $authUserId
+     * @return null|\Zend\Db\ResultSet\ResultSetInterface
+     */
     public function getSetAllowedRolesForRole($roleId, $authUserId)
     {
-        $select = $this->createSelectAllowedRolesByUserId($authUserId);
+        $select = $this->createSelectAllowedRolesByUserId($authUserId, array('p_role_id'));
+        $select->columns(array('id', 'label', 'is_guest', 'is_registered', 'description'));
         $select_permissions_roles = $this->createSelectPermissionsRoles($roleId, $authUserId);
         
-        $select->having->In('ur.id', $select_permissions_roles);
-       
+        $select->having->In('id', $select_permissions_roles)
+            ->AND
+            ->equalTo('p_role_id', $roleId);
+
         $resultSet = $this->selectWith($select);
-		
+
         return $resultSet;
     }
     

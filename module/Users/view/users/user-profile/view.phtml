@@ -142,7 +142,7 @@ function request(data, f)
 			else msg = 'Uncaught Error.\n' + jqXHR.responseText;    
 			
 			$('<div/>', {html:msg}).modalDialog().modalDialog('show');
-    },
+    }
 		
 	}).always(function(){
 		$("#placeholder").loader('stop');

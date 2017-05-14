@@ -110,9 +110,7 @@ class PagesManagerController extends PageController
 		
 		$route = $this->serviceLocator->get('Route');
 		$page = $pageModel->getPageByRouteId($route->id);
-		
-		$user = $this->serviceLocator->get('User');
-		
+
 		if(!$page || !$page->isActive()) return $this->notFoundAction();
 		
         $tableReport = $this->serviceLocator->get('TableReport');
