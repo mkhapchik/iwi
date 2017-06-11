@@ -20,6 +20,7 @@ return array(
 		'Menu',
 		'Users',
 		//'AbstructReport',
+        'Settings'
         ),
     'module_listener_options' => array(
         'module_paths' => array(

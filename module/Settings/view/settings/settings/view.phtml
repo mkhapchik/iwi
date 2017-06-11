@@ -1,0 +1,37 @@
+<h1 class="page-header">Управление меню</h1>
+
+<div class="margin-bottom-40">
+    <a class="btn btn-primary btn-md" href="<?=$this->url('settings', array('action'=>'add'));?>" title="Добавить настройку">
+        <span class="glyphicon glyphicon-plus"></span>Добавить настройку
+    </a>
+</div>
+
+<table class="table table-striped">
+<?php
+$currentCategory = null;
+foreach($settings as $setting):
+    if($setting->category->id !== $currentCategory):
+        $currentCategory =  $setting->category->id;
+?>
+        <tr>
+            <td style="border:0" colspan="4"><br></td>
+        </tr>
+        <tr class="active">
+            <td colspan="4" style="border-top-color: <?= $setting->category->color; ?>; border-top-width:3px">
+                <h3><?= $setting->category->label; ?></h3>
+                <p class="text-muted">
+                    <small> <?php echo $setting->category->description; ?></small>
+                </p>
+            </td>
+        </tr>
+<?php endif; ?>
+    <tr>
+        <td><?php echo $setting->label; ?></td>
+        <td><i><?php echo $setting->name; ?></i></td>
+        <td>
+            <input value="<?= $setting->value; ?>">
+        </td>
+        <td><?php echo $setting->description; ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
