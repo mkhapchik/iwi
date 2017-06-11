@@ -10,13 +10,6 @@
   padding: 0 15px;
 }
 
-#navbar .count{
-    @include border-radius(10px);
-    padding:2px 5px;
-    font-size:0.8em;
-    font-weight:bold;
-}
-
 @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
 
     #navbar .navbar-nav li{
