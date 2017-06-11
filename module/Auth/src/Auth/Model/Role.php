@@ -1,7 +1,8 @@
 <?php
 namespace Auth\Model;
+use Application\Entity\AbstractEntity;
 
-class Role
+class Role extends AbstractEntity
 {
 	public $id;
     public $label;
@@ -18,16 +19,6 @@ class Role
 		$this->is_registered = null;
         $this->roles=array();
 	}
-	
-	public function exchangeArray($data)
-    {
-		foreach($data as $k=>$v) if(property_exists($this, $k)) $this->$k=$v;
-    }
-	
-	public function getArrayCopy()
-    {
-        return get_object_vars($this);
-    }
     
     public function getAllowedRoles()
     {
@@ -38,8 +29,4 @@ class Role
     {
         $this->roles = $roles;
     }
-    
-   
-    
-
 }

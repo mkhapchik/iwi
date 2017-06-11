@@ -1,7 +1,8 @@
 <?php
 namespace Menu\Entity;
+use Application\Entity\AbstractEntity;
 
-class Menu
+class Menu extends AbstractEntity
 {
 	public $id;
 	
@@ -39,17 +40,7 @@ class Menu
     *  Элементы меню
     */
     public $items;
-	
-	public function exchangeArray($data)
-    {
-		$class = get_class($this);
-		foreach($data as $k=>$v) if(property_exists($class, $k)) $this->$k = $v;
-	}
-		
-	public function getArrayCopy()
-	{
-		return (array)$this;
-	}
+
 	
 	public function isActive()
 	{

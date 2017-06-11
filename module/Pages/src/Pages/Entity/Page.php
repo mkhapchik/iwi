@@ -1,9 +1,9 @@
 <?php
 namespace Pages\Entity;
-
+use Application\Entity\AbstractEntity;
 use Exception;
 
-class Page
+class Page extends AbstractEntity
 {
 	public $id;
 	
@@ -111,16 +111,6 @@ class Page
 	{
 		$this->route_id = false;
 		$this->uri = false;
-	}
-	
-	public function exchangeArray($data)
-    {
-		foreach($data as $k=>$v) if(property_exists($this, $k)) $this->$k = $v;
-	}
-
-	public function getArrayCopy()
-	{
-		return (array)$this;
 	}
 	
 	public function isActive()

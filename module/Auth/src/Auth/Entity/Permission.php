@@ -25,28 +25,7 @@ class Permission
             else if(!empty($data['actions'])) $this->actions = explode(',', $data['actions']);
         }
 	}
-    /*
-    public function toArray()
-    {
-        return $this;
-    }
-    */
-	/*
-	public function __get($name) 
-	{
-        return property_exists($this, $name) ? $this->$name : null;
-    }
-	
-	public function getArrayCopy()
-	{
-		return (array)$this;
-	}
-   
-    public function setActions($actions)
-    {
-        $this->actions = $actions;
-    }
-    */
+
     public function getActions()
     {
         return $this->actions;

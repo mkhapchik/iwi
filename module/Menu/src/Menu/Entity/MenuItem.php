@@ -1,7 +1,8 @@
 <?php
 namespace Menu\Entity;
+use Application\Entity\AbstractEntity;
 
-class MenuItem implements \Application\TreeObjectInterface
+class MenuItem extends AbstractEntity implements \Application\TreeObjectInterface
 {
 	/* 
     * Идентификатор пункта 
@@ -62,17 +63,6 @@ class MenuItem implements \Application\TreeObjectInterface
     * дочерние пункты меню 
     */
     public $children;
-    	
-	public function exchangeArray($data)
-    {
-		$class = get_class($this);
-		foreach($data as $k=>$v) if(property_exists($class, $k)) $this->$k = $v;
-	}
-	
-	public function getArrayCopy()
-	{
-		return (array)$this;
-	}
     
     public function getParentId()
     {
